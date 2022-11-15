@@ -1,0 +1,2851 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Projects</title>
+
+        <link href="https://code.jquery.com/jquery-3.5.1.js">
+        <script src='{{ctxPath}}/usr_css/Chart.min.js'></script>
+        <script src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
+        <script src="https://cdn.datatables.net/1.10.16/js/dataTables.bootstrap4.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/gh/emn178/chartjs-plugin-labels/src/chartjs-plugin-labels.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.2/js/select2.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/ion-rangeslider/2.3.1/js/ion.rangeSlider.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.2.1/jstree.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/randomcolor/0.6.1/randomColor.min.js"></script>
+        <script src='https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/moment.min.js'></script>
+        
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.2.1/themes/default/style.min.css" />
+        <link href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css' rel='stylesheet'/>
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/css/select2.min.css" rel="stylesheet" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/ion-rangeslider/2.3.1/css/ion.rangeSlider.min.css"/>
+        
+        <!--<link href=https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/css/bootstrap.min.css rel=stylesheet>-->
+        <!--<link href=https://cdnjs.cloudflare.com/ajax/libs/datatables/1.10.20/css/dataTables.bootstrap.min.css rel=stylesheet>-->
+        <!--<link href="https://cdn.datatables.net/1.10.21/js/jquery.dataTables.min.js">-->
+        
+        <style>
+            .select2-container {
+                width: 100% !important;
+                padding: 0;
+            }
+            .select2-search__field {
+                /*width: 310px !important;*/
+            }
+            .SimpleHistory__filters__form input[type="search"] {
+                /*width: 310px !important;*/
+            }
+            
+            .table td {
+                padding: .4rem !important;
+            }
+           
+            .inbtn {
+                display: inline;
+                justify-content: center;
+                align-items: center;
+                /*width: 1%;*/
+                height: 1%;  
+                margin-left: 5.5px;
+            }
+            
+            tr.selected {
+                background-color: #e6e6e6;
+            }
+            
+            th {
+                background-color: rgba(41,156,219,.3);
+                white-space: nowrap;
+                text-align: center;
+                vertical-align: middle;
+            }
+            
+            #team_table th, #team_table td { 
+                border: 1px solid #e1e6ea !important;
+            }
+            
+            .td-center {
+                text-align: center;
+                vertical-align: middle;
+            }
+            
+            .not-allowed {
+                cursor: not-allowed;
+            }
+            
+            .margin-for-icon {
+                margin-right: 5px;
+            }
+            
+            .projectSelectionTitle {
+                display: inline-block !important; 
+                margin-right: 5px;
+            }
+            
+            .projectSelectionDropdown {
+                padding: 0; 
+                display: inline-block !important; 
+                width: auto;
+            }
+            
+            .overflowY {
+                overflow-y: auto;
+            }
+            
+            .btnPadding {
+                padding-left: 4px;
+                padding-right: 4px;
+                padding-bottom: 0.1px;
+                padding-top: 0.1px;
+            }
+            
+            .btnPaddingbtn {
+                padding-left: 6px;
+                padding-right: 6px;
+                padding-bottom: 0.1px;
+                padding-top: 0.1px;
+            }
+            
+            .textareaDesc {
+                 height: 150px !important;
+            }
+            
+            .padding-team-member-table {
+                padding-left: 10px;
+            }
+            
+            .thead-team-member-table {
+                /*border: 2px solid #ff0000;*/
+            }
+            
+            /*#projectFolderTree [id^="red"] .jstree-anchor { color:red; }*/
+            
+            .file-link {
+                color: #0ca4ca;
+            }
+            
+            /*.jstree-default .jstree-clicked {*/
+            /*    color: #007bff;*/
+            /*}*/
+            
+            .forAlert {
+                margin-bottom: 0px; 
+                font-size: 12px;
+            }
+            
+            .hidden {
+                display: none;
+            }
+            
+            .no-data-tree-message {
+                display: none;
+                margin-top: 110px;
+                margin-bottom: 110px;
+            }
+            
+            .project-manager-label {
+                 font-weight: 500;
+            }
+            
+            .project-manager-text {
+                 background-color: rgb(233, 236, 239);
+                 opacity: 1;
+            }
+            
+            .paddingBtnAddProject {
+                 padding-top: 2px;
+                 padding-bottom: 2px;
+                 padding-left: 4px;
+                 padding-right: 4px;
+            }
+        </style>
+
+        <script type="text/javascript" charset="utf-8">
+        
+            $(document).ready(function() {
+                // START: Treeview for project folder
+                
+                // const task1 = { "id" : "ajson1", "parent" : "#", "text" : "Simple root node" };
+                // const task2 = { "id" : "ajson2", "parent" : "#", "text" : "Root node 2" };
+                // const task3 = { "id" : "ajson3", "parent" : "ajson2", "text" : "Child 1" };
+                // const task4 = { "id" : "ajson4", "parent" : "ajson2", "text" : "Child 2" };
+                // const task5 = { "id" : "ajson5", "parent" : "#", "text" : "Child 5" };
+                
+                // $("#projectFolderTree").jstree({
+                //     "core": {
+                //         "check_callback": true,
+                //         'data': []
+                //     },
+                // })
+                // .bind("select_node.jstree", function (e, data) {
+                //     var href = data.node.a_attr.href;
+                //     // document.location.href = href;
+                //     // var node = data.instance.get_node(data.selected[0]);
+                //     // data.instance.edit(node);
+                // });
+                
+                // ($("#projectFolderTree").jstree(true).settings.core.data).push(task5);
+                // console.log($("#projectFolderTree").jstree(true).settings.core.data);
+                
+                // $('#projectFolderTree')
+                // // listen for event
+                // .on('changed.jstree', function (e, data) {
+                //     console.log(data);
+                //     // var i, j, r = [];
+                //     // for(i = 0, j = data.selected.length; i < j; i++) {
+                //     //     r.push(data.instance.get_node(data.selected[i]).text);
+                //     // }
+                //     // $('#event_result').html('Selected: ' + r.join(', '));
+                // }).jstree();
+                
+                // function createJSTree(jsondata) {
+                //     $('#projectFolderTree').jstree({
+                //         "core": {
+                //             "check_callback": true,
+                //             'data': jsondata
+                //         },
+                //     })
+                //     .bind("select_node.jstree", function (e,data) {
+                //         console.log(data.selected);
+                //         var node = data.instance.get_node(data.selected[0]);
+                //         data.instance.edit(node);
+                //     });
+                //     return $("#SimpleJSTree").jstree(true);
+                // }
+                
+                // END: Treeview for project folder
+                
+                // $('#spec_table').DataTable({
+                //     stateSave :true,
+                //     scrollX: true
+                // });
+                
+                // $('.select2').select2();
+                
+                $('#alertInfo').hide();
+                
+                {{#if msg}}
+                $('#alertInfo').fadeIn(1500);
+                setTimeout(function() {
+                    $("#alertInfo").fadeOut(1500);
+                }, 3000);
+                {{/if}}
+                
+                // arrayStd = [];
+                arraySlct = [];
+
+                // var $stdSlct = $("#stdSelect").select2({
+                //     multiple: 'true',
+                //     placeholder: "Select Standards",
+                //     containerCssClass: 'tpx-select2-container select2-container-sm select2-grey',
+                //     dropdownCssClass: 'tpx-select2-drop select2-lightblue',
+                //     {{#if key}}
+                //     initSelection: function(element, callback) {
+                //         callback(arrayStd);
+                //     },
+                //     {{/if}}
+                //     ajax: {
+                //         url: "/remoting/QUO/A103",
+                //         dataType: 'json',
+                //         type: 'POST',
+                //         delay: 500,
+                //         data: function(param) {
+                //           return {
+                //             action: "get_list",
+                //             search: param.term
+                //           }
+                //         },
+                //         processResults: function (data) {
+                //           return {
+                //             results: data.body.stdList
+                //           };
+                //         }
+                //     },
+                //     minimumInputLength: 2,
+                //     formatResult: formatSelect,
+                //     formatSelection: formatTag,
+                //     escapeMarkup: function(m) { return m; }
+                // });
+                
+                var $stdSlct = $("#stdSelect").select2({
+                    multiple: 'true',
+                    placeholder: "Select Tag(s)"
+                });
+                $stdSlct.val(arraySlct).trigger("change");
+                
+                $("#editTag").select2({
+                    multiple: 'true',
+                    placeholder: "Add Tag(s)"
+                });
+                $("#addedTM").select2({
+                    multiple: 'true',
+                    placeholder: "Add Member"
+                });
+                $("#spec_tag").select2({
+                    multiple: 'true',
+                    placeholder:"Add Tag(s)"
+                });
+                
+                $("#spec-percentage").ionRangeSlider({
+                    // type: "double",
+                    min: 0,
+                    max: 100,
+                    from: 50,
+                    step: 5,
+                    grid: true
+                });
+                let my_range = $("#spec-percentage").data("ionRangeSlider");
+                
+    //             $(".dtfilter-select").change(function() {
+    // 			    filterDT();
+    // 			});
+    			
+    // 			$(".clearF").click(function(){
+    // 			   var inp = $(this).parent().parent().find('.dtfilter-input');
+    // 			   var sel = $(this).parent().parent().find('.dtfilter-select');
+    // 			   if (inp){
+    // 			       inp.val('');
+    // 			   }
+    // 			   if (sel){
+    // 			       sel.val(0).trigger('change');
+    // 			   }
+    // 			   filterDT();
+    // 			});
+                
+                $(document)
+                    // START: IGNORE 
+                     .on('click', '.update-scope', function(ev){
+                            var itemId = $(this).attr("data-number");
+                            $.post("{{ctxPath}}/t/IPM/copyds?remote", {iid: itemId, d_action:"getScope"}, function(data) {
+                                    $("#scope_id").val(itemId);
+                                    $("#scope-note").val(data.body.scope.note);
+                                    $("#scope-name").val(data.body.scope.name);
+                                }, "json");
+                    })
+                    // END: IGNORE 
+                    .on('click', '.update-prog', function(ev){
+                        var itemId = $(this).attr("data-number");
+                        if ($(this).hasClass("complete-prog")) {
+                            $.post("{{ctxPath}}/t/IPM/copyds?remote", {iid: itemId, d_action:"getSpec"}, function(data) {
+                                my_range.update({from: 100});
+                                $("#remarks").val(data.body.spec.remarks);
+                            }, "json");
+                        } else {
+                            $.post("{{ctxPath}}/t/IPM/copyds?remote", {iid: itemId, d_action:"getSpec"}, function(data) {
+                                my_range.update({from: data.body.spec.percentage});
+                                $("#remarks").val(data.body.spec.remarks);
+                            }, "json");
+                        }
+                        $("#spec_id").val(itemId);
+                    });
+                    
+                $(document)
+                     .on('click', '.update-spec', function(ev){
+                            var itemId = $(this).attr("data-number");
+                            $.post("{{ctxPath}}/t/IPM/copyds?remote", {iid: itemId, d_action:"getSpec"}, function(data) {
+                                $("#spec_id2").val(itemId);
+                                $("#spec-desc").val(data.body.spec.description);
+                                $("#spec-name").val(data.body.spec.name);
+                                
+                                // START - options for editing TAG in MODAL
+                                
+                                var specTag = data.body.specTag;
+                                $('#editTag')
+                                    .find('option')
+                                    .remove()
+                                    .end()
+                                var specTagAll = data.body.specTagAll;
+                                $.each(specTagAll, function (key, value) {
+                                    $("#editTag").append('<option value=' + value.id + '>' + value.name + '</option>');
+                                });
+                                var specArr = data.body.specArr;
+                                $('#editTag').val(specArr);
+                                
+                                // $('#editTag').trigger('change.select2');
+                                
+                                // END - options for editing TAG in MODAL
+                                
+                            }, "json");
+                    });
+                
+                // for TEAM MEMBER MODAL
+                $(document).on('click', '#btnAddTM', function(ev){
+                    var projectId = $('#sel_project').val();
+                    $.post("{{ctxPath}}/t/IPM/copyds?remote", {project_id: projectId, d_action:"get_team_member"}, function(data) {
+                        var teamMemberOption = data.body.teamMemberOption;
+                        console.log(teamMemberOption);
+                        var empArr = data.body.empArr;
+                        $('#addedTM')
+                            .find('option')
+                            .remove()
+                            .end()
+                        $.each(teamMemberOption, function (key, value) {
+                            $("#addedTM").append('<option value=' + value.id + '>' + value.full_name + '</option>');
+                        });
+                        $('#addedTM').val(empArr);
+                        
+                    }, "json");
+                });
+                    
+                $(document).on('click', '.updateAssignedTo', function(ev){
+                    var itemId = $(this).attr("data-number");
+                    $.post("{{ctxPath}}/t/IPM/copyds?remote", {iid: itemId, d_action:"getSpec"}, function(data) {
+                        $("#specIdEmp").val(itemId);
+                        $("#assignedEmp").val(data.body.spec.assigned_id);
+                    }, "json");
+                });
+                
+                $(document).on('click', '.changeSpecScope', function(ev){
+                    var itemId = $(this).attr("data-number");
+                    $.post("{{ctxPath}}/t/IPM/copyds?remote", {iid: itemId, d_action:"getSpec"}, function(data) {
+                        $("#specIdScope").val(itemId);
+                        $("#specScope").val(data.body.spec.scope_id);
+                    }, "json");
+                });
+                
+            	$("#removeProjectManagerBtn").hide();
+                $(document).on('click', '.changeProjectManager', function(ev){
+                    var mEmpId = $(this).attr("data-emp-id");
+                    var mTeamId = $(this).attr("data-team-id");
+                    $("#empList").val(mEmpId);
+                	if ($("#empList").val()) {
+                	    $("#removeProjectManagerBtn").show();
+                	}
+                	else {
+                	    $("#removeProjectManagerBtn").hide();
+                	}
+                    $("#projectIdEditManager").val($('#sel_project').val());
+                    $("#managerTId").val(mTeamId);
+                    
+                    // $("#managerId").val(mEmpId);
+                    // $.post("{{ctxPath}}/t/IPM/copyds?remote", {manager_id: managerId, d_action:"getSpec"}, function(data) {
+                    //     $("#specIdScope").val(itemId);
+                    // }, "json");
+                });
+                    
+                $(document).on('click', '#tbody tr', function () {
+                    if($(this).hasClass('selected')) {
+                        $(this).removeClass('selected');
+                    }
+                    else {
+                        table.$('tr.selected').removeClass('selected');
+                        $(this).addClass('selected');
+                    }
+                });
+                
+                $('input[type="file"]').change(function(e){
+                    var fileName = e.target.files[0].name;
+                    $('.custom-file-label').html(fileName);
+                });
+                
+                function fileToolbar(aV, aB, iV1, iB1, iV2, iB2, iV3, iB3) {
+                    // a = active, i = inactive, V = value, B = button
+                    var enableTitle = '';
+                    var disableTitle = '';
+                    let jsTree = $("#projectFolderTree").jstree(true);
+                    if ( $(aV).val() === '0' ) {
+                        // $(aBtn).css({'background-color': 'red', 'border-color': 'red'});
+                        $(aB).addClass('btn-danger');
+                        $(aB).removeClass('btn-secondary');
+                        $(aV).val('1');
+                        
+                        enableTitle = $(aB).attr("title");
+                        disableTitle = enableTitle.replace("Enable", "Disable");
+                        $(aB).prop('title', disableTitle);
+                        
+                        if ( aV === '#fdragVal' ) {
+                            $('#fdragMessage').show();
+                            jsTree.settings.dnd.is_draggable = true;
+                        }
+                        else {
+                            $('#fdragMessage').hide();
+                        }
+                        if ( aV === '#feditVal' ) {
+                            $('#feditMessage').show();
+                        }
+                        else {
+                            $('#feditMessage').hide();
+                        }
+                        if ( aV === '#fdeleteVal' ) {
+                            jsTree.uncheck_all();
+                            jsTree.settings.checkbox.cascade = 'down';
+                            jsTree.settings.core.multiple = true;
+                            jsTree.show_checkboxes();
+                            $("#fconfirmDeleteBtn").show();
+                        }
+                        else {
+                            jsTree.settings.checkbox.cascade = '';
+                            jsTree.settings.core.multiple = false;
+                            jsTree.hide_checkboxes();
+                            jsTree.uncheck_all();
+                            $("#fconfirmDeleteBtn").hide();
+                        }
+                        // $(iBtn1).add($(iBtn2)).add($(iBtn3)).css({'background-color': '#6c757d', 'border-color': '#6c757d'});
+                        $(iB1).add($(iB2)).add($(iB3)).addClass('btn-secondary');
+                        $(iB1).add($(iB2)).add($(iB3)).removeClass('btn-danger');
+                        $(iV1).add($(iV2)).add($(iV3)).val('0');
+                        $(iB1).prop('title', (($(iB1).attr("title")).replace("Disable", "Enable")));
+                        $(iB2).prop('title', (($(iB2).attr("title")).replace("Disable", "Enable")));
+                        $(iB3).prop('title', (($(iB3).attr("title")).replace("Disable", "Enable")));
+                    }
+                    else {
+                        // $(aBtn).css({'background-color': '#6c757d', 'border-color': '#6c757d'});
+                        $(aB).addClass('btn-secondary');
+                        $(aB).removeClass('btn-danger');
+                        $(aV).val('0');
+                        if ( aV === '#fdragVal' ) {
+                            $('#fdragMessage').hide();
+                            jsTree.settings.dnd.is_draggable = false;
+                        }
+                        if ( aV === '#feditVal' ) {
+                            $('#feditMessage').hide();
+                        }
+                        if ( aV === '#fdeleteVal' ) {
+                            jsTree.settings.checkbox.cascade = '';
+                            jsTree.settings.core.multiple = false;
+                            jsTree.hide_checkboxes();
+                            jsTree.uncheck_all();
+                            $("#fconfirmDeleteBtn").hide();
+                            // let selectedArr = jsTree.get_selected();
+                            // while (selectedArr.length > 0) {
+                            //     selectedArr.pop();
+                            // }
+                        }
+                        disableTitle = $(aB).attr("title");
+                        enableTitle = disableTitle.replace("Disable", "Enable");
+                        $(aB).prop('title', enableTitle);
+                    }
+                }
+                
+                // START - script for TREEVIEW (PROJECT FOLDER)
+                
+                $("#projectFolderTree").jstree();
+                
+                // $("#projectFolderTree").jstree({
+                //     "core": {
+                //         "check_callback": true,
+                //         'data': []
+                //     },
+                //     "types" : {
+                //         "folder" : {
+                //             "icon" : "fa-solid fa-folder"
+                //         },
+                //         "file": {
+                //             "max_children" : 0
+                //         }
+                //     },
+                //     "plugins" : [ "dnd", "types", "search", "sort", "checkbox" ]
+                // })
+                // .bind("select_node.jstree", function (e, data) {
+                //     $('#file_category_id').val(data.selected[0]);
+                    
+                //     var href = data.node.a_attr.href;
+                //     if ( $('#fdownloadVal').val() === '1' ) {
+                //         document.location.href = href;
+                //     }
+                    
+                //     else if ( $('#feditVal').val() === '1' ) {
+                //         var node = data.instance.get_node(data.selected[0]);
+                //         data.instance.edit(node);
+                //     }
+                //     // console.log($("#projectFolderTree").jstree(true).get_selected(true)[0]);
+                //     // if ($("#projectFolderTree").jstree(true).get_selected(true)[0].type === 'file') {
+                //         // console.log('file');                        
+                //     // }
+                //     // else if ($("#projectFolderTree").jstree(true).get_selected(true)[0].type === 'folder') {
+                //         // console.log('folder');                        
+                //     // }
+                    
+                // });
+                
+                // set default settings for tree view (PROJECT FOLDER). Can be changed from toolbar.
+                // $("#projectFolderTree").jstree(true).settings.dnd.is_draggable = false;
+                // $("#projectFolderTree").jstree(true).settings.core.multiple = false;
+                // $("#projectFolderTree").jstree(true).hide_checkboxes();
+                
+                var to = false;
+                $('#searchTree').keyup(function () {
+                    if (to) { clearTimeout(to); }
+                    to = setTimeout(function () {
+                        var v = $('#searchTree').val();
+                        $('#projectFolderTree').jstree(true).search(v);
+                    }, 100);
+                });
+                
+                // .bind("before.jstree", function (e, data) {
+                //     $('ul li > a').each(function() {
+                //         $(this).click(false);
+                //         $(this).dblclick(false);
+                //     });
+                // });
+                
+                let titleCreateFolderBtn = $("#fcreateFolderBtn").attr('title');
+                $("#fcreateFolderBtn").on("click", function() {
+                    if ( $('#fcreateFolderVal').val() === '0' ) {
+                        $(this).removeAttr('title');
+                        $("#fcreateFolderBtn").addClass("btn-danger").removeClass("btn-primary");
+                        $('#fcreateFolderVal').val('1');
+                        $('#newFolderDiv').show();
+                        $("#fclearInputBtn").show();
+                    }
+                    else {
+                        $(this).attr('title', titleCreateFolderBtn);
+                        $("#fcreateFolderBtn").addClass("btn-primary").removeClass("btn-danger");
+                        $('#fcreateFolderVal').val('0');
+                        $('#newFolderDiv').hide();
+                        $("#projectFolderTree").jstree(true).uncheck_all();
+                        if ($("#newFolderDiv").css('display').toLowerCase() === 'flex' || 
+                        $("#searchFolderDiv").css('display').toLowerCase() === 'flex' ||
+                        $("#uploadFileForm").css('display').toLowerCase() === 'block') {
+                            $("#fclearInputBtn").show();
+                        }
+                        else { $("#fclearInputBtn").hide(); }
+                    }
+                });
+                
+                $("#newFolderName").keypress(function(event) {
+                    if (event.keyCode === 13) {
+                        $("#confirmCreateFolderBtn").click();
+                    }
+                });
+                
+                $("#confirmCreateFolderBtn").on("click", function() {
+                    var selectedNode = $("#projectFolderTree").jstree(true).get_selected(true)[0];
+                    var newFolderName = $('#newFolderName').val();
+                    let jsTree = $("#projectFolderTree").jstree(true);
+                    
+                    if (newFolderName) {
+                        if (selectedNode) {
+                            // check if selected node is file
+                            if (selectedNode.type != 'file') {
+                                // folder under a folder
+                                $.post("{{ctxPath}}/t/IPM/copyds?remote", { d_action: "createFolderChild", projectId: $("#sel_project").val(), name: newFolderName, parent_id: selectedNode.id }, function(data) {
+                                    var file_category_id_custom = data.body.file_category_id_custom;
+                                    jsTree.create_node(selectedNode.id , { id: file_category_id_custom, text: newFolderName, type: 'folder' });
+                                    $('#projectFolderTree').show();
+                                    $('#noDataTreeMessage').hide();
+                                }, "json");
+                                $('#errorFolderProject').hide();
+                            }
+                            else {
+                                $('#errorFolderProjectContent').html('<b>ERROR.</b> Cannot create a new folder under an existing <b>FILE</b>. Choose an existing <b>FOLDER</b> only.');
+                                $('#errorFolderProject').show();
+                            }
+                        }
+                        else {
+                            // new root folder
+                            console.log('no selected node.');
+                            $.post("{{ctxPath}}/t/IPM/copyds?remote", { d_action: "createFolderRoot", projectId: $("#sel_project").val(), name: newFolderName }, function(data) {
+                                var file_category_id_custom = data.body.file_category_id_custom;
+                                // console.log(nodeId);
+                                jsTree.create_node('#' , { id: file_category_id_custom, text: newFolderName, type: 'folder' });
+                                $('#projectFolderTree').show();
+                                $('#noDataTreeMessage').hide();
+                            }, "json");
+                        }
+                    }
+                    else {
+                        console.log('error. no new folder name.');
+                    }
+                });
+                
+                $("#saveTreeBtn").on("click", function() {
+                    var treeJson = $("#projectFolderTree").jstree(true).get_json('#', {flat:true});
+                    console.log(treeJson);
+                    var treeJsonStr = JSON.stringify(treeJson);
+                    $.post("{{ctxPath}}/t/IPM/copyds?remote", { d_action: "updateTree", treeData: treeJsonStr}, function(data) {
+                        $('#successFolderProjectContent').html('<b>Successfully</b> updated project folder.');
+                        $('#successFolderProject').show();
+                        setTimeout(function() { 
+                            $('#successFolderProject').hide('slow');
+                        }, 2000);
+                    }, "json");
+                });
+                
+                $("#fdownloadBtn").on("click", function() {
+                    // console.log($("#projectFolderTree").jstree(true).get_selected());
+                    // console.log($("#projectFolderTree").jstree(true).get_bottom_checked());
+                    fileToolbar("#fdownloadVal", "#fdownloadBtn", "#feditVal", "#feditBtn", "#fdeleteVal", "#fdeleteBtn", "#fdragVal", "#fdragBtn");
+                });
+                
+                $("#fdeleteBtn").on("click", function() {
+                    fileToolbar("#fdeleteVal", "#fdeleteBtn", "#fdownloadVal", "#fdownloadBtn", "#feditVal", "#feditBtn", "#fdragVal", "#fdragBtn");
+                });
+                
+                $("#fconfirmDeleteBtn").on("click", function() {
+                    let jsTree = $("#projectFolderTree").jstree(true);
+                    var fileToDeleteArr = jsTree.get_selected();
+                    var fileToDeleteArrJson = JSON.stringify(fileToDeleteArr);
+                    var fileToDeleteArrAllData = jsTree.get_selected(true);
+                    // var bottom = $("#projectFolderTree").jstree(true).get_bottom_selected();
+                    // var bottomJson = JSON.stringify(bottom);
+                    
+                    var countFile = 0;
+                    var countFolder = 0;
+                    $.each(fileToDeleteArrAllData, function (key, value) {
+                        if (value.type === 'folder') {
+                            countFolder++;
+                        }
+                        else {
+                            countFile++;
+                        }
+                    });
+                    console.log(fileToDeleteArr);
+                    jsTree.delete_node(fileToDeleteArr);
+                    
+                    // var countParent = 0;
+                    // var reverseArrCount = -1;
+                    // while (fileToDeleteArrAllData.at(reverseArrCount).type === 'folder' && fileToDeleteArrAllData.at(reverseArrCount).children.length != 0) {
+                    //     reverseArrCount--;
+                    //     countParent++;
+                    // }
+                    // console.log('folder yg di auto check kan:\n\n-- ' + countParent + ' --');
+                    
+                    // if (fileToDeleteArrAllData.at(-1).type === 'folder' && fileToDeleteArrAllData.at(-1).children.length != 0) {
+                    //     // if 1 folder under 1 folder
+                    //     if (fileToDeleteArrAllData.length === 1) {
+                    //         $("#projectFolderTree").jstree(true).delete_node(fileToDeleteArrAllData);
+                    //     }
+                    //     else {
+                    //         while (countParent != 0) {
+                    //             fileToDeleteArrAllData.pop();
+                    //             countParent--;
+                    //             countFolder--;
+                    //         }
+                    //         $("#projectFolderTree").jstree(true).delete_node(fileToDeleteArrAllData);
+                    //     }
+                    //     // fileToDeleteArrJson = bottomJson;
+                    // }
+                    // else {
+                    //     $("#projectFolderTree").jstree(true).delete_node(fileToDeleteArr);
+                    // }
+                    
+                    $.post("{{ctxPath}}/t/IPM/copyds?remote", { d_action: "deleteFile", fileDeleteArr: fileToDeleteArrJson }, function(data) {
+                        $('#successFolderProjectContent').html('<b>Successfully</b> deleted:-<br><b>' + countFolder + '</b> folder(s).<br><b>' + countFile + '</b> file(s).');
+                        $('#successFolderProject').show();
+                        setTimeout(function() { 
+                            $('#successFolderProject').hide('slow');
+                        }, 5000);
+                        var allNodeArr = $("#projectFolderTree").jstree(true).get_json();
+                        if (allNodeArr.length === 0) {
+                            $('#projectFolderTree').hide();
+                            $('#noDataTreeMessage').show();
+                        }
+                    }, "json");
+                    
+                    $("#projectFolderTree").jstree(true).uncheck_all();
+                });
+                
+                $("#feditBtn").on("click", function() {
+                    fileToolbar("#feditVal", "#feditBtn", "#fdownloadVal", "#fdownloadBtn", "#fdeleteVal", "#fdeleteBtn", "#fdragVal", "#fdragBtn");
+                });
+                
+                $("#fdragBtn").on("click", function() {
+                    fileToolbar("#fdragVal", "#fdragBtn", "#fdownloadVal", "#fdownloadBtn", "#feditVal", "#feditBtn", "#fdeleteVal", "#fdeleteBtn");
+                });
+                
+                let titleSearchBtn = $("#fsearchBtn").attr('title');
+                $("#fsearchBtn").click(function() {
+                    if ($("#fsearchVal").val() === '0') {
+                        $(this).removeAttr('title');
+                        $("#fsearchBtn").addClass("btn-danger").removeClass("btn-primary");
+                        $("#fsearchVal").val('1');
+                        $("#searchFolderDiv").show();
+                        $("#fclearInputBtn").show();
+                    }
+                    else {
+                        $(this).attr('title', titleSearchBtn);
+                        $("#fsearchBtn").addClass("btn-primary").removeClass("btn-danger");
+                        $("#fsearchVal").val('0');
+                        $("#searchFolderDiv").hide();
+                        if ($("#newFolderDiv").css('display').toLowerCase() === 'flex' || 
+                        $("#searchFolderDiv").css('display').toLowerCase() === 'flex' ||
+                        $("#uploadFileForm").css('display').toLowerCase() === 'block') {
+                            $("#fclearInputBtn").show();
+                        }
+                        else { $("#fclearInputBtn").hide(); }
+                    }
+                });
+                
+                let titleUploadBtn = $("#fuploadBtn").attr('title');
+                $("#fuploadBtn").click(function() {
+                    if ($("#fuploadVal").val() === '0') {
+                        $("#fuploadBtn").addClass("btn-danger").removeClass("btn-primary");
+                        $(this).removeAttr('title');
+                        $("#fuploadVal").val('1');
+                        $("#uploadFileForm").show();
+                        $("#fclearInputBtn").show();
+                    }
+                    else {
+                        $(this).attr('title', titleUploadBtn);
+                        $("#fuploadBtn").addClass("btn-primary").removeClass("btn-danger");
+                        $("#fuploadVal").val('0');
+                        $("#uploadFileForm").hide();
+                        if ($("#newFolderDiv").css('display').toLowerCase() === 'flex' || 
+                        $("#searchFolderDiv").css('display').toLowerCase() === 'flex' ||
+                        $("#uploadFileForm").css('display').toLowerCase() === 'block') {
+                            $("#fclearInputBtn").show();
+                        }
+                        else { $("#fclearInputBtn").hide(); }
+                    }
+                });
+                
+                $("#fclearSelectedBtn").click(function() {
+                    console.log($("#projectFolderTree").jstree(true).get_selected(true));
+                    $("#projectFolderTree").jstree(true).uncheck_all();
+                    $('#file_category_id').val('');
+                    $('#successFolderProjectContent').html('<b>Successfully</b> cleared selected files/folders.');
+                    $('#successFolderProject').show();
+                    setTimeout(function() { 
+                        $('#successFolderProject').hide('slow');
+                    }, 2000);
+                });
+                
+                $("#fclearInputBtn").click(function() {
+                    let divs = $("#newFolderDiv").add($("#uploadFileForm")).add($("#searchFolderDiv")).add($("#fclearInputBtn"));
+                    let values = $("#fcreateFolderVal").add($("#fuploadVal")).add($("#fsearchVal"));
+                    let btns = $("#fcreateFolderBtn").add($("#fuploadBtn")).add($("#fsearchBtn"));
+                    divs.hide();
+                    values.val('0');
+                    btns.addClass("btn-primary").removeClass("btn-danger");
+                    $("#fsearchBtn").attr('title', titleSearchBtn);
+                    $("#fuploadBtn").attr('title', titleUploadBtn);
+                    $("#fcreateFolderBtn").attr('title', titleCreateFolderBtn);
+                });
+                
+                // END - script for TREEVIEW (PROJECT FOLDER)
+                
+                // START - script AQIL
+                
+                $(function() {
+                    $('.datepicker_project').daterangepicker({
+                        singleDatePicker: true,
+                        showDropdowns: true,
+                        minYear: '2010',
+                        locale: {
+                            format: 'YYYY-MM-DD'
+                        },
+                        parentEl: '#addProject'
+                    });
+                    
+                    $('.datepicker_scope').daterangepicker({
+                        singleDatePicker: true,
+                        showDropdowns: true,
+                        minYear: '2010',
+                        locale: {
+                            format: 'YYYY-MM-DD'
+                        },
+                        parentEl: '#addScopeModal'
+                    });
+                    
+                    $('.datepicker_edit_project').daterangepicker({
+                        singleDatePicker: true,
+                        showDropdowns: true,
+                        minYear: '2010',
+                        locale: {
+                            format: 'YYYY-MM-DD'
+                        },
+                        parentEl: '#UpdateModal'
+                    });
+                    
+                    $('.datepicker_edit_scope').daterangepicker({
+                        singleDatePicker: true,
+                        showDropdowns: true,
+                        minYear: '2010',
+                        locale: {
+                            format: 'YYYY-MM-DD'
+                        },
+                        parentEl: '#updateScope'
+                    });
+                });
+                
+                // $("#action_project").on("click", function() {
+                //     var formData = {
+                //         name: $("#project_name").val(),
+                //         desc: $("#project_desc").val(),
+                //         start: $("#project_end").val(),
+                //         end: $("#project_end").val(),
+                //         project: $("#project_manager_select").val()
+                //     };
+                //     console.log(formData);
+                //     $.post("{{ctxPath}}/t/IPM/copyds?remote", { d_action : "data_save", data_form : formData} , function( data ) {
+                //         location.reload();
+                //     });
+                // });
+                
+                // START - script for TREEVIEW (OVERALL PROJECT VIEW)
+                
+                $("#project_tree").jstree();
+                $("#project_tree").jstree(true).settings.core.themes.icons = false;
+                
+                // END - script for TREEVIEW (OVERALL PROJECT VIEW)
+                
+                // END - script AQIL
+                
+            	$("#project_tree").hide();
+            	$("#add_scope_tree").hide();
+            	$("#hr_project_tree").hide();
+            	$("#view_tree_project").click( function() {
+                    if ($('#project_tree').is(':hidden')) {
+                        $('#hr_project_tree').show();
+                        $('#project_tree').show();
+                        $("#add_scope_tree").show()
+                        // $("#view_tree_project").text("Close View Tree");
+                        $("#view_tree_project").prop('title', 'Hide Overall Project (Tree View)');
+                        $("#view_tree_project").addClass("btn-danger").removeClass("btn-primary");
+                    } 
+                    else {
+                        $('#hr_project_tree').hide();
+                        $('#project_tree').hide();
+                        $("#add_scope_tree").hide();
+                        // $("#view_tree_project").text("View Tree Project");
+                        $("#view_tree_project").prop('title', 'View Overall Project (Tree View)');
+                        $("#view_tree_project").addClass("btn-primary").removeClass("btn-danger");
+                    }
+            	});
+                
+                // IGNORE. for debug
+                var countSelProjectChanged = 1;
+                
+                // START - Form submission function
+                
+                $('#uploadFileForm').submit(function () {
+                    if ($('#file_category_id').val() === '') {
+                        $('#errorFolderProjectContent').html('<b>ERROR.</b> Please choose a folder for the uploaded file.');
+                        $('#errorFolderProject').show();
+                        return false;
+                    }
+                    else if ($("#projectFolderTree").jstree(true).get_node($('#file_category_id').val()).type === 'file') {
+                        $('#errorFolderProjectContent').html('<b>ERROR.</b> FILE cannot be a parent. Please choose a FOLDER as parent.');
+                        $('#errorFolderProject').show();
+                        return false;
+                    }
+                    else {
+                        // console.log($('#file_category_id').val());
+                        // console.log('not null');
+                        return true;
+                    }
+                });
+                
+                $('#inputTMForm').submit(function () {
+                    var addedTMJsonStr = JSON.stringify($('#addedTM').val());
+                    $.post("{{ctxPath}}/t/IPM/copyds?remote", { d_action: "save_team", inputTM: addedTMJsonStr, team_project_id: $('#team_project_id').val()}, function(data) {
+                        location.reload();
+                    }, "json");
+                    return false;
+                });
+                
+                // ADD PROJECT
+                $('#addProjectForm').submit(function () {
+                    var formData = {
+                        name: $("#project_name").val(),
+                        desc: $("#project_desc").val(),
+                        start: $("#project_start").val(),
+                        end: $("#project_end").val(),
+                        project: $("#project_manager_select").val()
+                    };
+                    if (formData["end"] > formData["start"]) {
+                        $.post("{{ctxPath}}/t/IPM/copyds?remote", { d_action : "data_save", data_form : formData, projectName : $("#project_name").val(), projectId: $('#sel_project').val() } , function( data ) {
+                            // Entered new project name already used
+                            if (parseInt(data.body.projectExist) === 1) {
+                                $("#project_name").focus();
+                                $("#errorAddProjectContent").html('Entered <b>project name</b> already exists. Please enter a different project name.');
+                                $("#errorAddProject").show();
+                            }
+                            else {
+                                location.reload();
+                            }
+                        }, "json");
+                    }
+                    else {
+                        alert("INVALID DATE RANGE. End date is greater than start date. Please choose a valid date range.");
+                    }
+                    return false;
+                });
+                
+                // UPDATE PROJECT
+                $('#update_project').click( function() {
+                    var dataForm = {
+                        id_project_custom: $('#id_project_custom').val(),
+                        project_end: $('#update_project_end').val(),
+                        project_start: $('#update_project_start').val(),
+                        project_desc: $('#update_decs_project').val(),
+                        project_name: $('#update_name_project').val()
+                    };
+                    var dataFormJSON = JSON.stringify(dataForm);
+                    if (dataForm["project_end"] > dataForm["project_start"]) {
+                        $.post("{{ctxPath}}/t/IPM/copyds?remote", { d_action : "update_project", updatedProjectName : $('#update_name_project').val(), formData : dataFormJSON }, function( data ) {
+                            // Entered updated project name already used
+                            if (parseInt(data.body.projectExist) === 1) {
+                                $("#update_name_project").focus();
+                                $("#errorUpdateProjectContent").html('Updated <b>project name</b> already exists. Please enter a different project name.');
+                                $("#errorUpdateProject").show();
+                            }
+                            else {
+                                location.reload();
+                            }
+                        }, "json");
+                    }
+                    else {
+                        alert("INVALID DATE RANGE. End date is greater than start date. Please choose a valid date range.");
+                    }
+                });
+                
+                // DELETE PROJECT
+                $('#delete_project_update').click( function() {
+                    $.post("{{ctxPath}}/t/IPM/copyds?remote", { d_action: "delete_project", project_id: $('#sel_project').val() }, function( data ) {
+                        location.reload();
+                    }, "json");
+                });
+                
+                // ADD SCOPE
+                $('#addScopeForm').submit(function () {
+                    var formData = {
+                        project_id_in_scope: $("#project_id_in_scope").val(),
+                        scope_name: $("#scope_name").val(),
+                        scope_start: $("#scope_start").val(),
+                        scope_end: $("#scope_end").val(),
+                        scope_desc: $("#scope_desc").val()
+                    };
+                    if (formData["scope_end"] > formData["scope_start"]) {
+                        $.post("{{ctxPath}}/t/IPM/copyds?remote", { d_action : "scope_save", data_form : formData, scopeName : $("#scope_name").val(), project_id : $('#sel_project').val() } , function( data ) {
+                            // Entered new scope name already used
+                            if (parseInt(data.body.scopeExist) === 1) {
+                                $("#scope_name").focus();
+                                $("#errorAddScopeContent").html('Entered <b>scope name</b> already exists for this project. Please enter a different scope name.');
+                                $("#errorAddScope").show();
+                            }
+                            else {
+                                location.reload();
+                            }
+                        }, "json");
+                    }
+                    else {
+                        alert("INVALID DATE RANGE. End date is greater than start date. Please choose a valid date range.");
+                    }
+                    return false;
+                });
+                
+                // UPDATE SCOPE
+                $('#update_scope').click( function() {
+                    var formData = {
+                        id_scope_custom : $("#id_scope_custom").val(),
+                        scope_id : $("#id_scope_select").val(),
+                        name: $("#update_name_scope").val(),
+                        desc: $("#update_scope_desc").val(),
+                        start: $("#update_scope_start").val(),
+                        end: $("#update_scope_end").val()
+                    };
+                    if (formData["end"] > formData["start"]) {
+                        $.post("{{ctxPath}}/t/IPM/copyds?remote", { d_action : "update_scope", data_form : formData, scopeName : $("#update_name_scope").val(), project_id : $('#sel_project').val() } , function( data ) {
+                            // Entered updated scope name already used
+                            if (parseInt(data.body.scopeExist) === 1) {
+                                $("#update_name_scope").focus();
+                                $("#errorUpdateScopeContent").html('Updated <b>scope name</b> already exists for this project. Please enter a different scope name.');
+                                $("#errorUpdateScope").show();
+                            }
+                            else {
+                                location.reload();
+                            }
+                        }, "json");
+                    }
+                    else {
+                        alert("INVALID DATE RANGE. End date is greater than start date. Please choose a valid date range.");
+                    }
+                });
+                
+                // DELETE SCOPE
+                $('#delete_update_scope').click( function() {
+                    var formData = {
+                        scopeIdCustom: $("#id_scope_custom").val(),
+                        scopeId: $("#id_scope_select").val()
+                    };
+                    var formDataJSON = JSON.stringify(formData);
+                    $.post("{{ctxPath}}/t/IPM/copyds?remote", { d_action: "delete_scope", data_form: formDataJSON }, function( data ) {
+                        location.reload();
+                    }, "json");
+                });
+                
+                // ADD SPEC.
+                $('#addSpecForm').submit(function () {
+                    var formData = {
+                        name: $("#inputName").val(),
+                        scope: $("#inputScope").val(),
+                        desc: $("#inputDesc").val(),
+                        assignedPerson: $("#inputPerson").val(),
+                        duration: $("#inputDuration").val(),
+                        tag: $("#stdSelect").val()
+                    };
+                    var formDataJSON = JSON.stringify(formData);
+                    $.post("{{ctxPath}}/t/IPM/copyds?remote", { d_action: "save", data_form: formDataJSON, project_id: $('#sel_project').val() } , function( data ) {
+                        // Entered new spec. name already used
+                        if (parseInt(data.body.specExist) === 1) {
+                            $("#inputName").focus();
+                            $("#errorAddSpecContent").html('Entered <b>specification name</b> already exists for this project. Please enter a different specification name.');
+                            $("#errorAddSpec").show();
+                            // console.log('same spec name.');
+                        }
+                        else {
+                            location.reload();
+                            // console.log('done save spec.');
+                        }
+                    }, "json");
+                    return false;
+                });
+                
+                // UPDATE SPEC. (TREE)
+                $("#btnUpdateSpecTree").click(function() {
+                    var formData = {
+                        specId: $("#id_spec_update").val(),
+                        name: $("#spec_name_udpdate").val(),
+                        scope: $("#spec_scop_update").val(),
+                        desc: $("#spec_desc_update").val(),
+                        assignedPerson: $("#spec_person_update").val(),
+                        duration: $("#spec_duration_update").val(),
+                        tag: $("#spec_tag").val()
+                    };
+                    var formDataJSON = JSON.stringify(formData);
+                    $.post("{{ctxPath}}/t/IPM/copyds?remote", { d_action: "spec_update", data_form: formDataJSON, project_id: $('#sel_project').val() } , function( data ) {
+                        // Updated spec. name already used
+                        if (parseInt(data.body.specExist) === 1) {
+                            $("#spec_name_udpdate").focus();
+                            $("#errorUpdateSpecTreeContent").html('Updated <b>specification name</b> already exists for this project. Please enter a different specification name.');
+                            $("#errorUpdateSpecTree").show();
+                            // console.log('same spec name.');
+                        }
+                        else {
+                            location.reload();
+                            // console.log('done save spec.');
+                        }
+                    }, "json");
+                });
+                
+                // UPDATE SPEC. (TABLE)
+                $("#updateSpecFormTable").submit(function () {
+                    var formData = {
+                        specId: $("#spec_id2").val(),
+                        name: $("#spec-name").val(),
+                        desc: $("#spec-desc").val(),
+                        tag: $("#editTag").val()
+                    };
+                    var formDataJSON = JSON.stringify(formData);
+                    $.post("{{ctxPath}}/t/IPM/copyds?remote", { d_action: "update_spec", data_form: formDataJSON, project_id: $('#sel_project').val() } , function( data ) {
+                        // Updated spec. name already used
+                        if (parseInt(data.body.specExist) === 1) {
+                            $("#spec-name").focus();
+                            $("#errorUpdateSpecTableContent").html('Updated <b>specification name</b> already exists for this project. Please enter a different specification name.');
+                            $("#errorUpdateSpecTable").show();
+                            // console.log('same spec name.');
+                        }
+                        else {
+                            location.reload();
+                            // console.log('done save spec.');
+                        }
+                    }, "json");
+                    return false;
+                });
+                
+                // DELETE SPEC. (TREE)
+                $('#btnDeleteSpecTree').click( function() {
+                    var formData = {
+                        specId: $("#id_spec_update").val()
+                    };
+                    var formDataJSON = JSON.stringify(formData);
+                    $.post("{{ctxPath}}/t/IPM/copyds?remote", { d_action: "delete_spec", data_form: formDataJSON }, function( data ) {
+                        location.reload();
+                    }, "json");
+                });
+                
+                // END - Form submission validation
+                
+            	$("#sel_project").change(function () {
+            	    
+            	    // IGNORE. for debug
+            	    console.log(countSelProjectChanged);
+            	    countSelProjectChanged++;
+            	    
+            	    window.localStorage.setItem("latestProject", $("#sel_project").val());
+            	    
+                    // START - script for BAR CHART (LEFT SIDE)
+            	    
+            	    Chart.plugins.register({
+                        afterDraw: function(chart) {
+                            if (chart.data.datasets.length === 0 || chart.data.datasets[0].data.length === 0) {
+                                // No data is present
+                                var ctx = chart.chart.ctx;
+                                var width = chart.chart.width;
+                                var height = chart.chart.height
+                                chart.clear();
+                                
+                                ctx.save();
+                                ctx.textAlign = 'center';
+                                ctx.textBaseline = 'middle';
+                                ctx.font = "16px normal 'Helvetica Nueue'";
+                                ctx.fillText('No data to display', width / 2, height / 2);
+                                ctx.restore();
+                            }
+                        }
+                    });
+                    
+                    // var ctx1 = $('#simpleBarCanvas');
+                    // ctx1.height(5000);
+                    var ctx1 = document.getElementById("simpleBarCanvas").getContext('2d');
+                    if (window.simpleBar != undefined) { window.simpleBar.destroy(); }
+                    window.simpleBar = new Chart(ctx1, {
+                        type: 'bar',
+                        data: {
+                            labels: [],
+                            datasets: []
+                        },
+                        options: {
+                            // responsive: false,
+                            maintainAspectRatio: true,
+                            legend: {
+                                display: false
+                            },
+                            scales: {
+                                yAxes: [{
+                                    ticks: {
+                                        beginAtZero: true,
+                                        suggestedMax: 120
+                                    }
+                                }]
+                            },
+                            plugins: {
+                                labels: {
+                                    render: function (args) {
+                                        strValue = String(args.value);
+                                        if (strValue === '100.00') {
+                                            return '100%';
+                                        }
+                                        else if (strValue.substr(3, 2) === '00') {
+                                            return strValue.substr(0, 2) + '%';
+                                        }
+                                        else if (strValue.substr(2, 2) === '00') {
+                                            return strValue.substr(0, 1) + '%';
+                                        }
+                                        else {
+                                            return args.value + '%';
+                                        }
+                                    },
+                                    fontColor: 'black',
+                                    textMargin: 10,
+                                    textShadow: true,
+                                }
+                            }
+                        }
+                    });
+                    $("#cardTopLeft").height($("#cardSimpleBar").height());
+                    
+                    // END - script for BAR CHART (LEFT SIDE)
+                    
+                    // START - script for BAR CHART (RIGHT SIDE)
+                    
+                    // var ctx2 = $('#barChartRight');
+                    // ctx2.height(5000);
+                    var ctx2 = document.getElementById("barChartRight").getContext('2d');
+                    if (window.barRight != undefined) { window.barRight.destroy(); }
+                    window.barRight = new Chart(ctx2, {
+                        type: 'horizontalBar',
+                        data: {
+                            labels: [],
+                            datasets: []
+                        },
+                        options: {
+                            borderWidth: 0,
+                            // responsive: false,
+                            maintainAspectRatio: true,
+                            interaction: {
+                                intersect: true,
+                                mode: 'index',
+                            },
+                            tooltips: {
+                                mode: 'point',
+                                filter: function (tooltipItem, data) {
+                                    var value = data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index];
+                                    if (value === 0) {
+                                        return false;
+                                    } else {
+                                        return true;
+                                    }
+                                }
+                            },
+                            indexAxis: 'y',
+                            scales: {
+                                // display: true,
+                                xAxes: [{
+                                    ticks: {
+                                        beginAtZero: true,
+                                        suggestedMax: 100,
+                                        callback: function(value, index, values) {
+                                            return value + '%';
+                                        }
+                                    }
+                                }]
+                            },
+                            legend: {
+                                display: false
+                            },
+                            plugins: {
+                                labels: {
+                                    render: function (args) {
+                                        strValue = String(args.value);
+                                        if (strValue === '0') {
+                                            return null;
+                                        }
+                                        else {
+                                            return args.value + '%';
+                                        }
+                                    },
+                                    fontColor: 'black',
+                                    textMargin: 10,
+                                    textShadow: true,
+                                }
+                            }
+                        }
+                    });
+                    $("#cardHeaderLeft").height($("#cardHeaderRight").height());
+                    $("#cardBottomLeft").height($("#cardHorizontalBar").height());
+                    
+                    // END - script for BAR CHART (RIGHT SIDE)
+                    
+                    // START - script for TREEVIEW (PROJECT FOLDER)
+                    
+                	if ($("#projectFolderTree")) { $('#projectFolderTree').empty().jstree('destroy'); }
+                	
+                    $("#projectFolderTree").jstree({
+                        "core": {
+                            "check_callback": true,
+                            'data': []
+                        },
+                        "types" : {
+                            "folder" : {
+                                "icon" : "fa-solid fa-folder"
+                            },
+                            "file": {
+                                "max_children" : 0
+                            }
+                        },
+                        "plugins" : [ "dnd", "types", "search", "sort", "checkbox" ]
+                    })
+                    .bind("select_node.jstree", function (e, data) {
+                        $('#file_category_id').val(data.selected[0]);
+                        
+                        var href = data.node.a_attr.href;
+                        if ( $('#fdownloadVal').val() === '1' ) {
+                            document.location.href = href;
+                        }
+                        
+                        else if ( $('#feditVal').val() === '1' ) {
+                            var node = data.instance.get_node(data.selected[0]);
+                            data.instance.edit(node);
+                        }
+                        // console.log($("#projectFolderTree").jstree(true).get_selected(true)[0]);
+                        // if ($("#projectFolderTree").jstree(true).get_selected(true)[0].type === 'file') {
+                            // console.log('file');                        
+                        // }
+                        // else if ($("#projectFolderTree").jstree(true).get_selected(true)[0].type === 'folder') {
+                            // console.log('folder');                        
+                        // }
+                    });
+                    $("#projectFolderTree").jstree(true).settings.dnd.is_draggable = false;
+                    $("#projectFolderTree").jstree(true).settings.core.multiple = false;
+                    $("#projectFolderTree").jstree(true).hide_checkboxes();
+                    $("#projectFolderTree").jstree(true).settings.checkbox.cascade = '';
+                    $("#projectFolderTree").jstree(true).settings.core.dblclick_toggle = false;
+                    
+                    // console.log($("#projectFolderTree").jstree(true).settings.core);
+                    
+                    // END - script for TREEVIEW (PROJECT FOLDER)
+                    
+                    // START - script for TREEVIEW (OVERALL PROJECT VIEW)
+                    
+                	if ($("#project_tree")) { $('#project_tree').empty().jstree('destroy'); }
+                	
+                    $("#project_tree").jstree({
+                        "core": {
+                            "check_callback": true,
+                            'data': []
+                        },
+                        // "types" : {
+                        //     "folder" : {
+                        //         "icon" : "fa-solid fa-folder"
+                        //     },
+                        //     "file": {
+                        //         "max_children" : 0
+                        //     }
+                        // },
+                        // "plugins" : [ "dnd", "types", "search", "sort", "checkbox" ]
+                        "plugins" : [ "sort" ]
+                    })
+                    .bind("select_node.jstree", function (e, data) {
+                        if (data.selected != null) {
+                            var text = data.selected[0];
+                            if (text.substring(0,1) == "p") {
+                                $.post("{{ctxPath}}/t/IPM/copyds?remote", {id_project: text, d_action:"get_project"}, function(data) {
+                                    var project_id = data.body.project_id;
+                                    var name = data.body.name;
+                                    var desc = data.body.note;
+                                    var start = data.body.start;
+                                    var start_format = moment(start).format('YYYY-MM-DD');  
+                                    var end = data.body.end;
+                                    var end_format = moment(end).format('YYYY-MM-DD');  
+                                    $('#UpdateModal').modal('toggle');
+                                    $('#id_project_custom').val(text);
+                                    $('#project_id_select').val(project_id);
+                                    $("#update_name_project").val(name);
+                                    $("#update_decs_project").val(desc);
+                                    $("#update_project_start").val(start_format);
+                                    $("#update_project_end").val(end_format);
+                                }, "json");
+                            }
+                            else if (text.substring(0,2) == "sc") {
+                                $.post("{{ctxPath}}/t/IPM/copyds?remote", {id_scope: text, d_action:"get_scope"}, function(data) {
+                                    var scope_id = data.body.scope_id;
+                                    var name = data.body.name;
+                                    var desc = data.body.note;
+                                    var start = data.body.start;
+                                    var start_format = moment(start).format('YYYY-MM-DD');
+                                    var end = data.body.end;
+                                    var end_format = moment(end).format('YYYY-MM-DD');
+                                    $('#updateScope').modal('toggle');
+                                    $('#id_scope_custom').val(text);
+                                    $('#id_scope_select').val(scope_id);
+                                    $("#update_name_scope").val(name);
+                                    $("#update_scope_desc").val(desc);
+                                    $("#update_scope_start").val(start_format);
+                                    $("#update_scope_end").val(end_format);
+                                }, "json");
+                            }
+                            else {
+                                $.post("{{ctxPath}}/t/IPM/copyds?remote", {id_spec: text, d_action:"get_spec"}, function(data) {
+                                    var name = data.body.name;
+                                    var spec_id = data.body.spec_id;
+                                    var scope_name = data.body.scope_name;
+                                    var scope_all = data.body.scope_all;
+                                    var desc = data.body.desc;
+                                    var duration = data.body.duration;
+                                    var person = data.body.assign_person;
+                                    // ---
+                                    var teamMember = data.body.teamMember;
+                                    // ---
+                                    var duration_all = data.body.duration_all;
+                                    var tagSelect = data.body.tagSelect;
+                                    var tag_all = data.body.tag_all;
+                                    var tag_id_select = data.body.tag_id_select;
+                                    
+                                    $('#update_spec_tree').modal('toggle');
+                                    
+                                    $('#spec_name_udpdate').val(name);
+                                    $('#id_spec_update').val(spec_id);
+                                    
+                                    $('#spec_scop_update')
+                                        .find('option')
+                                        .remove()
+                                        .end()
+                                    // $("#spec_scop_update").append('<option value=' + scope_name.id + ' hidden >'+ scope_name.name + '</option>');
+                                    $.each(scope_all, function (key, value) {
+                                        $("#spec_scop_update").append('<option value=' + value.id + '>' + value.name + '</option>');
+                                    });
+                                    $("#spec_scop_update").val(scope_name.id);
+                                    
+                                    $("#spec_desc_update").val(desc);
+                                    
+                                    $('#spec_person_update')
+                                        .find('option')
+                                        .remove()
+                                        .end()
+                                    // $("#spec_person_update").append('<option value=' + person.id + ' hidden >' + person.full_name + '</option>');
+                                    // -----
+                                    $.each(teamMember, function (key, value) {
+                                        $("#spec_person_update").append('<option value=' + value.id + '>' + value.full_name + '</option>');
+                                    });
+                                    // -----
+                                    $("#spec_person_update").val(person.id);
+                                    
+                                    $("#spec_duration_update")
+                                        .find('option')
+                                        .remove()
+                                        .end()
+                                    // $("#spec_duration_update").append('<option value=' + duration.id +' hidden >' + duration.name + '</option>');
+                                    $.each(duration_all, function (key, value) {
+                                        $("#spec_duration_update").append('<option value=' + value.id + '>' + value.name + '</option>');
+                                    });
+                                    $("#spec_duration_update").val(duration.id);
+                                    
+                                    $('#spec_tag')
+                                        .find('option')
+                                        .remove()
+                                        .end()
+                                    $.each(tag_all, function(key, value) {
+                                        $("#spec_tag").append('<option value=' + value.id + '>' + value.name + '</option>')
+                                    });
+                                    $("#spec_tag").val(tag_id_select)
+                                
+                                }, "json");
+                            }
+                        }
+                    });
+                    // $("#projectFolderTree").jstree(true).settings.dnd.is_draggable = false;
+                    // $("#projectFolderTree").jstree(true).settings.core.multiple = false;
+                    // $("#projectFolderTree").jstree(true).hide_checkboxes();
+                    // $("#projectFolderTree").jstree(true).settings.checkbox.cascade = '';
+                    $("#project_tree").jstree(true).settings.core.dblclick_toggle = false;
+                    // $("#project_tree").jstree(true).settings.core.themes.icons = false;
+                    
+                    // console.log($("#project_tree").jstree(true).settings.core.themes);
+                    
+                    // END - script for TREEVIEW (OVERALL PROJECT VIEW)
+            	    
+            	    $.post("{{ctxPath}}/t/IPM/copyds?remote", { d_action: "update_page", project: $("#sel_project").val() }, function (data) {
+            	        
+            	        $("#team_project_id").val($("#sel_project").val());
+            	        $("#project_id_upload").val($("#sel_project").val());
+            	        $("#project_id_in_scope").val($("#sel_project").val())
+            	        
+            	        // START - data for BAR CHART
+            	        
+            	        projectInfo = data.body.dataForBar;
+            	        
+                        $.each(projectInfo, function (key, value) {
+                            scopeInfo = value.scope_percentage
+                            $.each(scopeInfo, function (key, value) {
+                                window.simpleBar.data.labels.push(key);
+                            });
+                        });
+                        
+                        var scopePercentArr = [];
+                        $.each(projectInfo, function (key, value) {
+                            scopeInfo = value.scope_percentage
+                            $.each(scopeInfo, function (key, value) {
+                                scopePercentArr.push(value);
+                            });
+                        });
+                        
+                        // color
+                        var bgColorArr = [];
+                        $.each(scopePercentArr, function (index, value) {
+                            percentage = parseFloat(value);
+                            if (percentage == 100.00) {
+                                // bg-success
+                                bgColorArr.push('#198754');
+                            }
+                            else if (percentage > 75.00) {
+                                // bg-info
+                                bgColorArr.push('#0dcaf0');
+                            }
+                            else if (percentage > 50.00) {
+                                // bg-warning
+                                bgColorArr.push('#ffc107');
+                            }
+                            else {
+                                // bg-danger
+                                bgColorArr.push('#dc3545');
+                            }
+                        });
+            
+                        var dataSet = {}
+                        $.each(projectInfo, function (key, value) {
+                            dataSet = {
+                                data: scopePercentArr,
+                                backgroundColor: bgColorArr,
+                                hoverBackgroundColor: bgColorArr,
+                            };
+                        });
+                        window.simpleBar.data.datasets.push(dataSet);
+                        
+                        window.simpleBar.update();
+                        
+                        // END - data for BAR CHART
+                        
+                        // overall project progress
+                        overallPercentStr = String(data.body.dataForBar[0].total_percentage);
+                        
+                        // ex: 100.00 -> 100
+                        if (overallPercentStr === '100.00') {
+                            $("#overallProjectProgress").val("100% (PROJECT COMPLETED)");
+                            $("#overallProjectProgress").css("background-color","#ccffcc");
+                        }
+                        // ex: 80.00 -> 80
+                        else if (overallPercentStr.substr(3, 2) === '00') {
+                            $("#overallProjectProgress").val(overallPercentStr.substr(0, 2) + '%');
+                            $("#overallProjectProgress").css("background-color","#e9ecef");
+                        }
+                        // ex: 0.00 -> 0
+                        else if (overallPercentStr.substr(2, 2) === '00') {
+                            $("#overallProjectProgress").val(overallPercentStr.substr(0, 1) + '%');
+                            $("#overallProjectProgress").css("background-color","#e9ecef");
+                        }
+                        // ex: 80.25 -> (no change)
+                        else {
+                            $("#overallProjectProgress").val(overallPercentStr + '%');
+                            $("#overallProjectProgress").css("background-color","#e9ecef");
+                        }
+                        
+                        // $("#overallProjectProgress").val("0%");
+                        // $("#overallProjectProgress").css("background-color","#e9ecef");
+            	        
+                        // START - data for TABLE
+                        
+                        if ( $.fn.dataTable.isDataTable( '#spec_table' ) ) {
+                            $('#spec_table').DataTable().destroy();
+                        }
+                        
+                        // header
+                        theader = "";
+                        theader += '<tr><th>' 
+                                // + 'NO.' + "</th><th>" 
+                                + 'ID' + "</th><th>" 
+                                + 'NAME' + "</th><th>" 
+                                + 'SCOPE' + "</th><th>" 
+                                + 'DURATION' + "</th><th>" 
+                                + 'ASSIGNED TO' + "</th><th>"
+                                + 'PROGRESS (%)' + "</th><th>"
+                                + 'STATUS' + "</th><th>"
+                                + 'ACTION' + "</th></tr>";
+                        $("#theader").html(theader);
+            
+                        // body
+                        var specList = data.body.specList;
+                        tbody = "";
+                        countSpec = 0;
+                        $.each(specList, function (key, value) {
+                            var id = value.id;
+                            var name = value.name;
+                            var scope = value.scopeName;
+                            var duration = value.duration;
+                            var assignedTo = value.assignedTo;
+                            var progress = value.progressPercent;
+                            var status = value.statusName;
+                            countSpec++;
+                            
+                            var btnStartWorking = ''
+                            if (String(status) === 'Completed') {
+                                btnStartWorking = '<button disabled type="submit" class="btn btn-info btn-sm not-allowed" title="Completed" value="start_job" name="d_action"><i class="fa fa-play"></i></button>'
+                            }
+                            else if (String(status) === 'In-Progress') {
+                                btnStartWorking = '<button disabled type="submit" class="btn btn-info btn-sm not-allowed" title="In-Progress" value="start_job" name="d_action"><i class="fa fa-play"></i></button>'
+                            }
+                            else {
+                                btnStartWorking = '<button type="submit" class="btn btn-info btn-sm" title="Start working on this spec." value="start_job" name="d_action"><i class="fa fa-play"></i></button>'
+                            }
+            
+                            tbody += '<tr><td class="td-center">'
+                            // + countSpec + '</td><td class="td-center">'
+                            + id + '</td><td>'
+                            + '<a role="button" href="#" class="update-spec" data-toggle="modal" data-target="#specModal" data-number=' + id + '>' + name + '</a></td><td>'
+                            + '<a role="button" href="#" class="changeSpecScope" data-toggle="modal" data-target="#changeSpecScope" data-number=' + id + '>' + scope + '</a></td><td class="td-center">'
+                            + duration + '</td><td>'
+                            + '<a role="button" href="#" class="updateAssignedTo" data-toggle="modal" data-target="#editAssignedTo" data-number=' + id + '>' + assignedTo + '</a></td><td class="td-center">'
+                            + '<a role="button" href="#" class="btn btn-dark btn-sm update-prog btn-block font-weight-bold" data-toggle="modal" data-number=' + id + ' data-target="#percentageModal">' + progress + '</a></td><td class="td-center">'
+                            + status + '</td><td class="td-center">'
+                            + '<form action="{{ctxPath}}/t/IPM/copyds?invoke" method="POST">'  
+                    	       + '<input type="hidden" name="spec_id" value=' + id + '/>'
+                    	       + '<div class="btn-group" role="group">'
+                    	           + btnStartWorking
+                    	           + '<button type="button" class="btn btn-success btn-sm update-prog complete-prog" title="Completed" data-toggle="modal" data-number=' + id + ' data-target="#percentageModal"><i class="fa fa-flag-checkered"></i></button>'
+                    	           + '<button type="submit" class="btn btn-danger btn-sm" title="Remove" value="remove_spec" name="d_action"><i class="fa fa-trash"></i></button>'
+                               + '</div>'
+                            + '</form>'
+                            + '</td></tr>';
+                        });
+                        $("#tbody").html(tbody);
+                        
+                        // footer
+                        tfooter = "";
+                        tfooter += '<tr><th>' 
+                                // + 'NO.' + "</th><th>"
+                                + 'ID' + "</th><th>" 
+                                + 'NAME' + "</th><th>" 
+                                + 'SCOPE' + "</th><th>" 
+                                + 'DURATION' + "</th><th>" 
+                                + 'ASSIGNED TO' + "</th><th>"
+                                + 'PROGRESS (%)' + "</th><th>"
+                                + 'STATUS' + "</th><th>"
+                                + 'ACTION' + "</th></tr>";
+                        $("#tfooter").html(tfooter);
+                        
+            	        table = $("#spec_table").DataTable( { 
+            	           // stateSave :true,
+                            scrollX: true,
+                            // "order": [[ 2, 'asc' ]]
+                            "language": {
+                                "emptyTable":     "No data to display",
+                                "info":           "Showing <b>_START_</b> to <b>_END_</b> out of <b>_TOTAL_</b> specification(s)",
+                                "infoEmpty":      "Showing <b>0</b> to <b>0</b> out of <b>0</b> specification(s)",
+                                "infoFiltered":   "[filtered from <b>_MAX_</b> total specification(s)]",
+                                "lengthMenu":     "Show _MENU_ specifications",
+                            }
+            	        });
+            	        
+                        // END - data for TABLE
+                        
+                        // START - Data for RIGHT SIDE OF PAGE
+                        
+                        var data_name = data.body.project_name;
+                        var team_task = data.body.team_task;
+                        var name_task = data.body.name_task;
+                        var dict_data = data.body.dict_data;
+                        var dict_test = data.body.dict_test;
+                        
+                        // try {
+                        var name = data_name[0].name;
+                    
+                        // START - Insert data into TEAM MEMBER TABLE
+                        
+                        var theader = "";
+                        theader += '<tr><th>' 
+                                + 'NO.' + "</th><th>" 
+                                + 'NAME' + "</th><th>"
+                                + 'TASK' + "</th></tr>";
+                        $("#theaderLeft").html(theader);
+                        
+                        var tbody = "";
+                        var length = 0;
+                        if (Object.keys(name_task).length > 0) {
+                            var countTd = 1; 
+                            $.each(name_task, function (key, value) {
+                                if (value.length > 0) {
+                                    tbody += '<tr><td class="td-center">' + countTd + '.</td><td>' + key + '</td><td><ul class="pl-4 mb-1" id="dataForTd' + countTd + '"></ul></td>';
+                                }
+                                else {
+                                    tbody += '<tr><td class="td-center">' + countTd + '.</td><td>' + key + '</td><td class="td-center"><b><i>No Task.</i></b></td>';
+                                }
+                                countTd++;
+                            });
+                        
+                            tbody += '</tr>'
+                            
+                            $("#tableBody").html(tbody);
+                            
+                            var countTdData = 1;
+                            $.each(name_task, function (key, value) {
+                                if (value.length > 0) {
+                                    $.each(value, function (key, value) {
+                                        $("#dataForTd"+countTdData).append('<li>' + value + '</li>');
+                                    });
+                                    countTdData++;
+                                }
+                                else {
+                                    countTdData++;
+                                }
+                            });
+                        }
+                        else {
+                            console.log('lalu');
+                            tbody += '<tr><td class="td-center" colspan="3">No data to display</td></tr>'
+                            $("#tableBody").html(tbody);
+                        }
+
+                        // END - Insert data into TEAM MEMBER TABLE
+                    
+                        // START - Insert data into HORIZONTAL BAR CHART
+                        
+                        $.each(dict_data, function (key, value) {
+                            window.barRight.data.labels.push(key);
+                        });
+                        
+                        var dataSet = {}
+                        $.each(dict_test, function (key, value) {
+                            // var color = Math.floor((Math.random() * 1000000) + 1);
+                            // var bgcolor = "#" + ("000000" + color.toString(16)).slice(-6)
+                            var color = randomColor();
+                            dataSet = {
+                                label: key,
+                                data: Object.values(value),
+                                backgroundColor: color,
+                                hoverBackgroundColor: color,
+                            };
+                            window.barRight.data.datasets.push(dataSet);
+                        });
+                    
+                        window.barRight.update();
+                        
+                        var project_manager_data = data.body.project_manager;
+                        
+                        if (project_manager_data.length === 0) {
+                            $("#projectManagerText").html('None. <a href="#" class="changeProjectManager" data-toggle="modal" data-target="#modalEditManager">Add project manager.</a>');
+                            console.log('No project manager.');
+                        }
+                        else {
+                            var managerTeamId = data.body.project_manager[0].project_team_id;
+                            var managerEmpId = data.body.project_manager[0].emp_id;
+                            var managerName = data.body.project_manager[0].full_name;
+                            
+                            $("#projectManagerText").html('<a href="#" class="changeProjectManager" data-toggle="modal" data-target="#modalEditManager" data-team-id=' + managerTeamId + ' data-emp-id=' + managerEmpId + '>' + managerName + '</a>');
+                        }
+                        
+                        // $("#project_manager").val(project_manager);
+                        // $("#project_name").html(name);
+                        // <a role="button" href="#" class="update-spec" data-toggle="modal" data-target="#specModal" data-number=' + id + '>' + name + '</a>
+                        // $("#projectManagerText").html('<a href="#" class="changeProjectManager" data-toggle="modal" data-target="#modalEditManager" data-team-id=' + managerTeamId + ' data-emp-id=' + managerEmpId + '>' + managerName + '</a>');
+                        
+                            // END - Insert data into HORIZONTAL BAR CHART
+                        // } 
+                        // catch (error) {
+                            // $("#project_manager").val("No Project Manager");
+                            // $("#projectManagerText").html('None. <a href="#" class="changeProjectManager" data-toggle="modal" data-target="#modalEditManager">Add project manager.</a>');
+                            // console.log('error');
+                            // if (Object.keys(name_task).length == 0) {
+                            //     tbody += '<tr><td class="td-center" colspan="3">No data to display</td></tr>'
+                            //     $("#tableBody").html(tbody);
+                            // }
+                        // }
+                        
+                        // END - Data for RIGHT SIDE OF PAGE
+                        
+                        // START - for ADD SPECIFICATION MODAL
+                        
+                        // Scope
+                        var projectScope = data.body.projectScope;
+                        $('#inputScope')
+                            .find('option')
+                            .remove()
+                            .end()
+                        $("#inputScope").append('<option value="" disabled selected hidden>Select Spec. Scope</option>');
+                        $.each(projectScope, function (key, value) {
+                            $("#inputScope").append('<option value=' + value.id + '>' + value.name + '</option>');
+                        });
+                        
+                        // Assigned To
+                        var teamMember = data.body.teamMember;
+                        $('#inputPerson')
+                            .find('option')
+                            .remove()
+                            .end()
+                        $("#inputPerson").append('<option value="" disabled selected hidden>Select Employee</option>');
+                        $.each(teamMember, function (key, value) {
+                            $("#inputPerson").append('<option value=' + value.id + '>' + value.full_name + '</option>');
+                        });
+                        
+                        // END - for ADD SPECIFICATION MODAL
+                        
+                        // START - for EDIT PROJECT MANAGER MODAL
+                        
+                        var empAvailabeList = data.body.empAvailabeList;
+                        $('#empList')
+                            .find('option')
+                            .remove()
+                            .end()
+                        $("#empList").append('<option value="" disabled selected hidden>Select Project Manager</option>');
+                        $.each(empAvailabeList, function (key, value) {
+                            $("#empList").append('<option value=' + value.id + '>' + value.full_name + '</option>');
+                        });
+                        
+                        // END - for EDIT PROJECT MANAGER MODAL
+                        
+                        // START - for editing in TABLE
+                        
+                        // Scope
+                        $('#specScope')
+                            .find('option')
+                            .remove()
+                            .end()
+                        $("#specScope").append('<option value="" disabled selected hidden>Select New Spec. Scope</option>');
+                        $.each(projectScope, function (key, value) {
+                            $("#specScope").append('<option value=' + value.id + '>' + value.name + '</option>');
+                        });
+                        
+                        // Assigned To
+                        $('#assignedEmp')
+                            .find('option')
+                            .remove()
+                            .end()
+                        $("#assignedEmp").append('<option value="" disabled selected hidden>Select New Assigned Employee</option>');
+                        $.each(teamMember, function (key, value) {
+                            $("#assignedEmp").append('<option value=' + value.id + '>' + value.full_name + '</option>');
+                        });
+                        
+                        // END - for editing in TABLE
+                        
+                        // START: data for PROJECT FOLDER (TREEVIEW)
+                        
+                        // FILE CATEGORY
+                        var fileCategoryAll = data.body.fileCategoryAll;
+                        if (fileCategoryAll.length === 0) {
+                            $('#projectFolderTree').hide();
+                            $('#noDataTreeMessage').show();
+                        }
+                        else {
+                            $('#noDataTreeMessage').hide();
+                            $('#projectFolderTree').show();
+                        }
+                        var fileCategory = {}
+                        $.each(fileCategoryAll, function (key, value) {
+                            var parent = value.parent_id;
+                            // parent_id = parseInt(value.parent_id);
+                            if (parent === '0') {
+                                parent = '#';
+                            }
+                            fileCategory = {
+                                "id" : value.file_category_id_custom, 
+                                "parent" : parent,
+                                "text" : value.name,
+                                "type": "folder"
+                            };
+                            ($("#projectFolderTree").jstree(true).settings.core.data).push(fileCategory);
+                        });
+                        
+                        // FILES
+                        var fileList = data.body.fileList
+                        var fileItem = {}
+                        $.each(fileList, function (key, value) {
+                            fileItem = {
+                                "id": value.file_id_custom,
+                                "parent": value.file_category_id,
+                                "text": value.file_fn,
+                                "icon": value.icon,
+                                "type": "file",
+                                "a_attr": {
+                                    href: '/bl?tn=prom_project_file&cn=file&k=' + value.id
+                                },
+                                "li_attr": {
+                                    "class": "file-link"
+                                }
+                            };
+                            ($("#projectFolderTree").jstree(true).settings.core.data).push(fileItem);
+                        });
+                    
+                        $("#projectFolderTree").jstree(true).refresh();
+                        
+                        // END: data for PROJECT FOLDER (TREEVIEW)
+                        
+                        // START: data for OVERALL PROJECT VIEW (TREEVIEW 2)
+                        
+                        // PROJECT
+                        var current_project = data.body.current_project
+                        var data_project = {}
+                        $.each(current_project, function(key, value){
+                            data_project = {
+                                "id" : value.id_project_custom,
+                                "parent": "#",
+                                "text" : value.name,
+                                "icon": "fa-solid fa-folder"
+                            };
+                            ($("#project_tree").jstree().settings.core.data).push(data_project);
+                        });                
+                        
+                        // SCOPE(S)
+                        var scopeList = data.body.current_scope
+                        var scope = {}
+                        $.each(scopeList, function (key, value) {
+                            scope = { 
+                                "id" : value.id_scope_custom, 
+                                "parent" : value.id_project_custom , 
+                                "text" : value.name,
+                                "icon" : "fa-sharp fa-solid fa-folder-open",
+                            };
+                            ($("#project_tree").jstree().settings.core.data).push(scope);
+                        });
+                        
+                        // SPEC(S)
+                        var specList = data.body.current_spec
+                        var data_spec = {}
+                        $.each(specList, function(key, value){
+                            data_spec = {
+                                "id" : value.id_spec_custom,
+                                "parent": value.id_scope_custom,
+                                "text" : value.name,
+                                "icon" : "fa-sharp fa-solid fa-file-pen",
+                            };
+                            ($("#project_tree").jstree().settings.core.data).push(data_spec);
+                        }); 
+                    
+                        $("#project_tree").jstree(true).refresh();
+                        
+                        // START: data for OVERALL PROJECT VIEW (TREEVIEW 2)
+                        
+            	    }, "json");
+            	    
+            	});
+            	
+                // if no project at all in DB, show modal to add project 	
+            	try {
+                    var latestProject = window.localStorage.getItem("latestProject");
+                    if (latestProject) {
+                        console.log("test")
+                        console.log(latestProject)
+                        $("#sel_project").val(String(latestProject));
+                        $("#sel_project").trigger("change");
+                    }
+                    else {
+            	        $("#sel_project").trigger("change");
+                    }
+            	}
+            	catch (error) {
+            	    console.log('No project in DB.');
+                	$('#noProjectNotify').modal('show');
+                	$("#noProjectAddProjectBtn").click( function() {
+                	    $('#noProjectNotify').modal('hide');
+                	    $("#btnCloseModalAddProject").hide();
+                        $('#addProject').modal({
+                            backdrop: 'static',
+                            keyboard: false
+                        });
+                        $('#addProject').modal('show');
+                	});
+            	   // alert('No project availabe to display in system. Please add a project to proceed.');
+            	   // $("#btnCloseModalAddProject").hide();
+                //     $('#addProject').modal({
+                //         backdrop: 'static',
+                //         keyboard: false
+                //     })
+                    // $('#addProject').modal('show')
+            	   // $("#addProject").attr("data-backdrop","static");
+            	   // $("#addProject").attr("data-keyboard","false");
+            	   // $("#addProject").show();
+            	    
+            	}
+            	
+            });
+        	
+        </script>
+    
+    </head>
+    <body>
+    	<div class="row">
+    		<div class="col-xl-12">
+    			<div class="breadcrumb-holder">
+    				<h1 class="main-title projectSelectionTitle">Project Selection:
+                    <select name="sel_project" id="sel_project" class="form-control form-control-sm projectSelectionDropdown">
+                        {{#each projectList}}
+                        <option value="{{id}}">{{name}}</option>
+                        {{/each}}
+                    </select>
+                    <!--<a role="button" href="#" class="btn btn-primary btn-sm inbtn btnPadding" data-toggle="modal" data-target="#addModal" title="Add specification"><i class="fa fa-plus fa-xs"></i></a>-->
+                    <a role="button" href="#" class="badge btn-primary paddingBtnAddProject" data-toggle="modal" data-target="#addProject" title="Add project"><i class="fa fa-plus fa-xs"></i></a>
+    				</h1>
+    				<ol class="breadcrumb float-right">
+    					<li class="breadcrumb-item">Home</li>
+    					<li class="breadcrumb-item active">Projects</li>
+    				</ol>
+    				<div class="clearfix"></div>
+    			</div>
+    		</div>
+    	</div>
+        	
+        <div class="container-fluid">
+            <div class="row">
+                
+            	<!-- START: LEFT SIDE -->
+                <div class="col-xs-12 col-sm-12 col-md-5 col-lg-5 col-xl-5">						
+                    <div class="card mb-3">
+                        <div class="card-header">
+                            <!--<h3 id=project_name></h3>-->
+                            <h3><i class="fa-solid fa-circle-info margin-for-icon"></i>Project Detail</h3>
+                        </div>
+                    
+                        <div class="card-body overflowY" id="cardTopLeft">
+                            <div class="row mb-3 mr-2">
+                                <label for="overallProjectProgress" class="col-5">Overall Project Progress:</label>
+                                <input type="text" class="form-control form-control-sm col-7" id="overallProjectProgress" name="overallProjectProgress" disabled>
+                            </div>
+                            <div class="row mb-3 mr-2">
+                                <div class='col-4 pr-0 project-manager-label'>Project Manager:</div>
+                                <div id='projectManagerText' class='form-control form-control-sm col project-manager-text'></div>
+                                <!--<label for="project_manager" class="col-4">Project Manager:</label>-->
+                                <!--<input type="text" class="form-control form-control-sm col-8" id="project_manager" name="project_manager" disabled>-->
+                                
+                            </div>
+                            <div class="row mb-1 mr-2">
+                                <label for="team_table" class="col-12">Team Member<a role="button" id="btnAddTM" href="#" class="btn btn-primary btn-sm inbtn btnPadding" data-toggle="modal" data-target="#addTeam" title="Add/Edit team member"><i class="fa fa-user-pen fa-xs"></i></a></label>
+                            </div>
+                            <div class="row mr-2 padding-team-member-table">
+                                <table class="table table-bordered table-hover responsive col-12" id="team_table">
+                                    <thead id="theaderLeft" class="thead-team-member-table"></thead>
+                                    <tbody id="tableBody"></tbody>
+                                </table>
+                            </div>
+                            <div class="btn-group btn-group-sm" role="group">
+                                <button type="button" id="view_tree_project" class="btn btn-primary" title="View Overall Project (Tree View)"><i class="fa-solid fa-folder-tree fa-xs"></i></button>
+                            </div>
+                            <div class="btn-group btn-group-sm ml-1" role="group">
+                                <button type="button" id="add_scope_tree" class="btn btn-primary" data-toggle="modal" data-target="#addScopeModal">Add Scope</button>
+                            </div>
+                            <hr id='hr_project_tree'>
+                            <div id="project_tree"></div>
+                        </div>
+                        <div class="card-header" id="cardHeaderLeft">
+                            <h3><i class="fa-solid fa-folder margin-for-icon"></i>Project Folder</h3>
+                        </div>
+                        <div class="card-body overflowY" id="cardBottomLeft">
+                            <input type="hidden" id="fcreateFolderVal" value='0'>
+                            <input type="hidden" id="fdownloadVal" value='0'>
+                            <input type="hidden" id="fdeleteVal" value='0'>
+                            <input type="hidden" id="feditVal" value='0'>
+                            <input type="hidden" id="fdragVal" value='0'>
+                            <input type="hidden" id="fsearchVal" value='0'>
+                            <input type="hidden" id="fuploadVal" value='0'>
+                            <div class="btn-toolbar mb-3" role="toolbar" aria-label="Toolbar with button groups">
+                                <div class="btn-group btn-group-sm" role="group">
+                                    <button type="button" class="btn btn-primary" id="fcreateFolderBtn" title="Create New Folder"><i class="fa-solid fa-folder-plus fa-xs"></i></button>
+                                    <button type="button" class="btn btn-primary" id="fuploadBtn" title="Upload File"><i class="fa-solid fa-upload fa-xs"></i></button>
+                                    <button type="button" class="btn btn-primary" id="fsearchBtn" title="Search For Files"><i class="fa-solid fa-magnifying-glass fa-xs"></i></button>
+                                </div>
+                                <div class="btn-group btn-group-sm ml-1" role="group">
+                                    <button type="button" class="btn btn-danger hidden" id="fclearInputBtn" title="Clear Input Box(es)"><i class="fa-solid fa-circle-xmark fa-xs"></i></button>
+                                </div>
+                                <div class="btn-group btn-group-sm ml-1" role="group">
+                                    <button type="button" class="btn btn-secondary" id="fdeleteBtn" title="Enable File Deletion"><i class="fa-solid fa-trash fa-xs"></i></button>
+                                    <button type="button" class="btn btn-success hidden" id="fconfirmDeleteBtn" title="Confirm File Deletion"><i class="fa-solid fa-check fa-xs"></i></button>
+                                    <button type="button" class="btn btn-secondary" id="fdownloadBtn" title="Enable File Downloading"><i class="fa-solid fa-download fa-xs"></i></button>
+                                </div>
+                                <div class="btn-group btn-group-sm ml-2" role="group">
+                                    <button type="button" class="btn btn-success" id="saveTreeBtn" title="Save/Update Project Folder"><i class="fa-solid fa-floppy-disk fa-xs"></i></button>
+                                    <button type="button" class="btn btn-secondary" id="feditBtn" title="Enable File Renaming"><i class="fa-solid fa-pencil fa-xs"></i></button>
+                                    <button type="button" class="btn btn-secondary" id="fdragBtn" title="Enable Drag and Drop"><i class="fa-solid fa-arrows-up-down-left-right fa-xs"></i></button>
+                                </div>
+                                <div class="btn-group btn-group-sm ml-2" role="group">
+                                    <button type="button" class="btn btn-secondary" id="fclearSelectedBtn" title="Clear Selected Files/Folders"><i class="fa-solid fa-square-minus fa-xs"></i></button>
+                                </div>
+                            </div>
+                            <div id='errorFolderProject' class="hidden alert alert-danger alert-dismissible fade show" role="alert">
+                                <p class='forAlert' id='errorFolderProjectContent'></p>
+                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div id='successFolderProject' class="hidden alert alert-success alert-dismissible fade show" role="alert">
+                                <p class='forAlert' id='successFolderProjectContent'></p>
+                                <!--<button type="button" class="close" data-dismiss="alert" aria-label="Close">-->
+                                <!--    <span aria-hidden="true">&times;</span>-->
+                                <!--</button>-->
+                            </div>
+                            <div class="input-group input-group-sm mb-3 border border-dark p-2 rounded" id='newFolderDiv' style='display:none'>
+                                <input type="text" class="form-control" id="newFolderName" name="newFolderName" placeholder="Enter folder name.." autocomplete="off">
+                                <div class="input-group-append">
+                                    <button type="button" class="btn btn-success" id="confirmCreateFolderBtn">Create Folder</button>
+                                </div>
+                                <p class='mb-0'><small><i><b>*1. If no existing folder is selected, will create a new root folder.<br>
+                                *2. If an existing folder is selected, will create a new folder under the selected folder.<br>
+                                *3. Only FOLDER can be a parent. FILE cannot be a parent.</b></i></small></p>
+                            </div>
+                            <div class="input-group input-group-sm mb-3 border border-dark p-2 rounded" id='searchFolderDiv' style='display:none'>
+                                <div class="input-group-prepend">
+                                    <label class="input-group-text" for="searchTree">Search Folder:</label>
+                                </div>
+                                <input type="text" class="form-control" id="searchTree" name="searchTree" placeholder="Enter keyword.." autocomplete="off">
+                            </div>
+                            <form id='uploadFileForm' action="/t/IPM/copyds?invoke" method="post" enctype="multipart/form-data" class="mb-3 border border-dark p-2 rounded" style='display:none'>
+                                <div class="input-group input-group-sm">
+                                    <div class="custom-file">
+                                        <input type="hidden" name="file_category_id" id="file_category_id">
+                                        <input type="hidden" name="project_id_upload" id="project_id_upload">
+                                        <input type="file" class="custom-file-input" id="uploadProjectFile" name="attachments[0]" accept="" required>
+                                        <label class="custom-file-label" for="uploadProjectFile">Choose a file to upload for this project..</label>
+                                    </div>
+                                    <div class="input-group-append">
+                                        <button class="btn btn-outline-secondary" type="submit" id="uploadFileBtn" name="d_action" value="uploadFile">Upload</button>
+                                    </div>
+                                </div>
+                                <p class="mb-0"><small><i><b>*Click on one of any existing FOLDER ONLY first before uploading a file.</b></i></small></p>
+                            </form>
+                            <!-- for file renaming button -->
+                            <p id='feditMessage' style='display:none' class="mb-0"><small><i><b>*1. Make sure to SAVE after finished renaming.<br>
+                            *2. Please do not change the FILE TYPE. Rename the FILE NAME only.</b></i></small></p>
+                            <!-- for drag and drop button -->
+                            <p id='fdragMessage' style='display:none' class="mb-0"><small><i><b>*Make sure to SAVE after finished drag and dropping.</b></i></small></p>
+                            <hr>
+                            <!--<a href="/bl?tn=prom_project_file&cn=file&k=5">wg.png</a>-->
+                            <p class='text-center no-data-tree-message' id='noDataTreeMessage'>No data to display</p>
+                            <div id="projectFolderTree" style='display:none'>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!--<div class="card mb-3">-->
+                        							
+                    <!--</div>-->
+                    
+                </div>
+            	<!-- END: LEFT SIDE -->
+            	
+                <!-- START: RIGHT SIDE -->
+            	<div class="col-xs-12 col-sm-12 col-md-7 col-lg-7 col-xl-7">
+        
+                    <!--<div class="form-group">-->
+                    <!--    <label for="overallProjectProgress">Overall Project Progress:</label>-->
+                    <!--    <input type="text" class="form-control form-control-sm" id="overallProjectProgress" name="overallProjectProgress" disabled>-->
+                    <!--</div>-->
+            	
+            		<div class="card mb-3">
+            			<div class="card-header">
+            				<h3><i class="fa-solid fa-chart-column margin-for-icon"></i>Scope Progress</h3>
+            			</div>
+            				
+            			<div class="card-body" id="cardSimpleBar">
+        					<canvas id="simpleBarCanvas"></canvas>
+        				</div>
+        				
+        				<div class="card-header" id="cardHeaderRight">
+                            <h3><i class="fa-solid fa-chart-bar margin-for-icon"></i>Team Member Progress</h3>
+                        </div>
+                    
+                        <!--- add barChart -->
+                        <div class="card-body" id="cardHorizontalBar">
+                            <canvas id="barChartRight"></canvas>
+                        </div>
+            		</div>
+            		
+            	</div>
+            	<!-- END: RIGHT SIDE -->
+            
+            </div> <!-- /row -->
+        
+            <!-- TABLE -->
+            <div class="row">
+                <div class="col-xxl-12 col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                	<div class="card mb-3">
+                		<div class="card-header">
+                			<h3><i class="fa fa-list margin-for-icon"></i>Specification List<a role="button" href="#" class="btn btn-primary btn-sm inbtn btnPadding" data-toggle="modal" data-target="#addModal" title="Add specification"><i class="fa fa-plus fa-xs"></i></a></h3>
+                		</div>
+                		
+                   	    <div class="card-body">
+                   	        <div class="table-responsive">
+                            	<table class="table table-bordered table-hover responsive" id="spec_table" width="100%">
+                                	<thead id="theader"></thead>
+                                  	<tbody id="tbody"></tbody>
+                                  	<tfoot id="tfooter"></tfoot>
+                                </table>
+                            </div> <!-- /table-responsive -->
+                        </div> <!-- /card-body -->
+                    </div> <!-- /card mb-3 -->
+                </div>
+            </div>
+            <!-- /TABLE -->
+        </div> <!-- /container-fluid --> 
+    	
+    	<!-- MODALS -->
+    	
+        <!-- START: modal ADD SPECIFICATIONS -->
+        <div class="modal fade custom-modal" id="addModal" tabindex="-1" role="dialog" aria-labelledby="addModal" aria-hidden="true">
+            <form id="addSpecForm" action="{{ctxPath}}/t/IPM/copyds?invoke" method="POST">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                    
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel2">Add Specification</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">×</span>
+                            </button>
+                        </div>
+                        
+                        <div class="modal-body">
+                            <div id='errorAddSpec' class="hidden alert alert-danger alert-dismissible fade show" role="alert">
+                                <p class='forAlert' id='errorAddSpecContent'></p>
+                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group col-md-6">
+                                    <label for="inputName">Name</label>
+                                    <input type="text" class="form-control form-control-sm" id="inputName" name="inputName" placeholder="Enter Spec. Name" autocomplete="off" required>
+                                </div>
+                                <div class="form-group col-md-6">
+                                    <label for="inputScope">Scope</label>
+                                    <select name="inputScope" id="inputScope" class="form-control form-control-sm" required></select>
+                                </div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="inputDesc">Description</label>
+                                <textarea class="form-control form-control-sm" id="inputDesc" placeholder="Enter Spec. Description" name="inputDesc"></textarea>
+                            </div>
+                            
+                            <div class="form-row">
+                                <div class="form-group col-md-6">
+                                    <label for="inputPerson">Assigned Person</label>
+                                    <select name="inputPerson" id="inputPerson" class="form-control form-control-sm" required></select>
+                                </div>
+                                <div class="form-group col-md-6">
+                                    <label for="inputDuration">Duration</label>
+                                    <select name="inputDuration" id="inputDuration" class="form-control form-control-sm" required> 
+                                        <option value="" disabled selected hidden>Select Duration</option>
+                                        {{#each durationList}}
+                                        <option value="{{id}}">{{name}}</option>
+                                        {{/each}}
+                                    </select>
+                                </div>
+                            </div>
+                            
+                            <div class="form-row">
+                                <div class="form-group col-md-12">
+                                    <!--<label for="inputAddress2"><button type="button" class="btn btn-primary btn-sm"><i class="fa fa-plus"></i> Add New</button></label> -->
+                                    <label for="stdSelect">Tag</label>
+                                    <!--<input type="text" class="form-control" id="inputAddress2" placeholder="Tag(s)">-->
+                                    <select id="stdSelect" name="tag" class="form-control form-control-sm" multiple="multiple">
+                                        {{#each tags}}
+                                        <option value="{{id}}">{{name}}</option>
+                                        {{/each}}
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="modal-footer">
+                        <!--<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>-->
+                            <button type="submit" name="d_action" value="save" class="btn btn-primary">Save</button>
+                        </div>
+                    
+                    </div>
+                </div>
+            </form>
+        </div>
+        <!-- END: modal ADD SPECIFICATIONS -->    	
+        
+        <!-- START: modal UPDATE PROGRESS -->
+        <div class="modal fade custom-modal" id="percentageModal" tabindex="-1" role="dialog" aria-labelledby="addModal" aria-hidden="true">
+            <form id="transaction-form" action="{{ctxPath}}/t/IPM/copyds?invoke" method="POST">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                        
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel2">Update Progress</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">×</span>
+                            </button>
+                        </div>
+                        
+                        <div class="modal-body">
+                            <div class="form-group">
+                                <label for="inputDesc">Progress (%)</label>
+                                <input type="text" class="js-range-slider" name="percentage_progress" value="" id="spec-percentage"/>
+                            </div>
+                            <div class="form-group">
+                                <label for="remarks">Remarks</label>
+                                <textarea class="form-control form-control-sm" name="remarks" id="remarks"></textarea>
+                            </div>
+                        </div>
+                        
+                        <div class="modal-footer">
+                            <input type="hidden" name="spec_id" id="spec_id" value="" />
+                            <!--<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>-->
+                            <button type="submit" id="b_action" name="d_action" value="update_percentage" class="btn btn-success">Update</button>
+                        </div>
+                        
+                    </div>
+                </div>
+            </form>
+        </div>
+        <!-- END: modal UPDATE PROGRESS -->
+        
+        <!-- START: modal UPDATE INFORMATION - SPEC [NAME, DESCRIPTION, TAG] -->
+        <div class="modal fade custom-modal" id="specModal" tabindex="-1" role="dialog" aria-labelledby="addModal" aria-hidden="true">
+            <form id="updateSpecFormTable" action="{{ctxPath}}/t/IPM/copyds?invoke" method="POST">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                        
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel2">Update Information</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">×</span>
+                            </button>
+                        </div>
+                        
+                        <div class="modal-body">
+                            <div id='errorUpdateSpecTable' class="hidden alert alert-danger alert-dismissible fade show" role="alert">
+                                <p class='forAlert' id='errorUpdateSpecTableContent'></p>
+                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="form-group">
+                                <label for="inputDesc">Name</label>
+                                <input type="text" class="form-control form-control-sm" name="spec_name" id="spec-name"/>
+                            </div>
+                            <div class="form-group">
+                                <label for="inputDesc">Description</label>
+                                <textarea class="form-control form-control-sm textareaDesc" name="spec_desc" id="spec-desc"></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label for="editTag">Tag(s)</label>
+                                <select id="editTag" name="editTag" class="form-control form-control-sm" multiple="multiple"></select>
+                            </div>
+                        </div>
+                        
+                        <div class="modal-footer">
+                            <input type="hidden" name="spec_id" id="spec_id2" value="" />
+                            <!--<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>-->
+                            <button type="submit" class="btn btn-success">Update</button>
+                        </div>
+                        
+                    </div>
+                </div>
+            </form>
+        </div>
+        <!-- END: modal UPDATE INFORMATION - SPEC [NAME, DESCRIPTION, TAG] -->
+        
+        <!-- START: modal UPDATE INFORMATION - SPEC [ASSIGNED TO] -->
+        <div class="modal fade custom-modal" id="editAssignedTo" tabindex="-1" role="dialog" aria-labelledby="addModal" aria-hidden="true">
+            <form action="{{ctxPath}}/t/IPM/copyds?invoke" method="POST">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                        
+                        <div class="modal-header">
+                            <h5 class="modal-title">Change Assigned Employee</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">×</span>
+                            </button>
+                        </div>
+                        
+                        <div class="modal-body">
+                            <div class="form-group">
+                                <label for="assignedEmp">Assigned Employee</label>
+                                <select name="assignedEmp" id="assignedEmp" class="form-control form-control-sm"></select>
+                            </div>
+                        </div>
+                        
+                        <div class="modal-footer">
+                            <input type="hidden" name="specIdEmp" id="specIdEmp" value=""/>
+                            <button type="submit" name="d_action" value="updateAssignedTo" class="btn btn-success">Update</button>
+                        </div>
+                        
+                    </div>
+                </div>
+            </form>
+        </div>
+        <!-- END: modal UPDATE INFORMATION - SPEC [ASSIGNED TO] -->
+        
+        <!-- START: modal UPDATE INFORMATION - SPEC [SPEC. SCOPE] -->
+        <div class="modal fade custom-modal" id="changeSpecScope" tabindex="-1" role="dialog" aria-labelledby="addModal" aria-hidden="true">
+            <form action="{{ctxPath}}/t/IPM/copyds?invoke" method="POST">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                        
+                        <div class="modal-header">
+                            <h5 class="modal-title">Change Scope</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">×</span>
+                            </button>
+                        </div>
+                        
+                        <div class="modal-body">
+                            <div class="form-group">
+                                <label for="specScope">Spec. Scope</label>
+                                <select name="specScope" id="specScope" class="form-control form-control-sm"></select>
+                            </div>
+                        </div>
+                        
+                        <div class="modal-footer">
+                            <input type="hidden" name="specIdScope" id="specIdScope" value=""/>
+                            <button type="submit" name="d_action" value="updateSpecScope" class="btn btn-success">Update</button>
+                        </div>
+                        
+                    </div>
+                </div>
+            </form>
+        </div>
+        <!-- END: modal UPDATE INFORMATION - SPEC [SPEC. SCOPE] -->
+        
+        <!-- START: modal TEAM MEMBER -->
+        <div class="modal fade custom-modal" id="addTeam" tabindex="-1" role="dialog" aria-labelledby="add" aria-hidden="true">
+            <form id="inputTMForm" action="{{ctxPath}}/t/IPM/copyds?invoke" method="POST">  
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                        
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel2">Add/Edit Team Member</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">×</span>
+                            </button>
+                        </div>
+                        
+                        <div class="modal-body">
+                            <div class="form-group">
+                                <label for="addedTM">Team Member(s)</label>
+                                <input type="hidden" id="team_project_id" name="team_project_id" >
+                                <select id="addedTM" name="inputTM" class="form-control form-control-sm" multiple="multiple">
+                                    {{#each employeeList}}
+                                    <option value="{{id}}">{{full_name}}</option>
+                                    {{/each}}
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="modal-footer">
+                            <!--<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>-->
+                            <button type="submit" id="inputTMSubmit" name="d_action" value="save_team" class="btn btn-primary">Save</button>
+                        </div>
+                    
+                    </div>
+                </div>
+            </form>
+        </div>
+        <!-- END: modal TEAM MEMBER -->
+        
+        <!-- START: modal EDIT PROJECT MANAGER -->
+        <div class="modal fade custom-modal" id="modalEditManager" tabindex="-1" role="dialog" aria-labelledby="add" aria-hidden="true">
+            <form id="transaction-form" action="{{ctxPath}}/t/IPM/copyds?invoke" method="POST">  
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                        
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel2">Add/Edit Project Manager</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">×</span>
+                            </button>
+                        </div>
+                        
+                      <div class="modal-body">
+                            <div class="form-group">
+                                <label for="empList">Project Manager</label>
+                                <select name="empList" id="empList" class="form-control form-control-sm"></select>
+                            </div>
+                        </div>
+                        
+                        <div class="modal-footer">
+                            <input type="hidden" name="projectIdEditManager" id="projectIdEditManager">
+                            <input type="hidden" name="managerTId" id="managerTId">
+                            <button type="submit" id='removeProjectManagerBtn' name="d_action" value="delete_project_manager" class="btn btn-danger">Remove Project Manager</button>
+                            <button type="submit" name="d_action" value="update_project_manager" class="btn btn-success">Update</button>
+                        </div>
+                    
+                    </div>
+                </div>
+            </form>
+        </div>
+        <!-- END: modal EDIT PROJECT MANAGER -->
+        
+        <!-- START: MODAL AQIL -->
+        
+        <!-- START: modal ADD PROJECT -->
+        <div class="modal fade custom-modal" id="addProject" tabindex="-1" role="dialog" aria-labelledby="addProject" aria-hidden="true" style="display: none;">
+            <form id="addProjectForm" action="{{ctxPath}}/t/IPM/copyds?invoke" method="POST">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                        
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel2">Add Project</h5>
+                            <button id='btnCloseModalAddProject' type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">×</span>
+                            </button>
+                        </div>
+                        
+                        <div class="modal-body">
+                            <div id='errorAddProject' class="hidden alert alert-danger alert-dismissible fade show" role="alert">
+                                <p class='forAlert' id='errorAddProjectContent'></p>
+                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group col-md-6">
+                                    <label for="inputName">Project Name</label>
+                                    <input type="text" class="form-control form-control-sm" id="project_name" name="project_name" placeholder="Enter Project Name" autocomplete="off" required>
+                                </div>
+                                <div class="form-group col-md-6">
+                                    <label for="project_manager">Project Manager</label>
+                                    <select name="project_manager" id="project_manager_select"  class="form-control form-control-sm" selected="project">
+                                        <option disabled selected hidden>Select Project Manager</option>
+                                        {{#each employeeList}}
+                                            <option value="{{id}}">{{full_name}}</option>
+                                        {{/each}}
+                                    </select> 
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="inputDesc">Description</label>
+                                <textarea class="form-control form-control-sm" id="project_desc" name="description" required placeholder="Enter Project Description"></textarea>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group col-md-6">
+                                    <label for="inputPerson">Start Date</label>
+                                    <input type="text" class="form-control datepicker_project form-control-sm" id="project_start" name="project_start" required>
+                                </div>
+                                <div class="form-group col-md-6">
+                                    <label for="inputPerson">End Date</label>
+                                    <input type="text" class="form-control datepicker_project form-control-sm" id="project_end" name="project_end" required>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="modal-footer">
+                            <button type="submit" id="action_project" class="btn btn-primary">Save</button>
+                        </div>
+                    
+                    </div>
+                </div>
+            </form>
+        </div>
+        <!-- END: modal ADD PROJECT -->
+        
+        <!-- START: modal ADD SCOPE -->
+        <div class="modal fade custom-modal" id="addScopeModal" tabindex="-1" role="dialog" aria-labelledby="addProject" aria-hidden="true" style="display: none;">
+            <form id="addScopeForm" action="{{ctxPath}}/t/IPM/copyds?invoke" method="POST">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                        
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel2">Add Scope</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">×</span>
+                            </button>
+                        </div>
+                        
+                        <div class="modal-body">
+                            <div id='errorAddScope' class="hidden alert alert-danger alert-dismissible fade show" role="alert">
+                                <p class='forAlert' id='errorAddScopeContent'></p>
+                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="form-group">
+                                <label for="inputName">Scope Name</label>
+                                <input type="hidden" name="project_id_in_scope" id="project_id_in_scope" value="" />
+                                <input type="text" class="form-control form-control-sm" id="scope_name" name="scope_name" placeholder="Enter Scope Name" autocomplete="off" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="inputDesc">Description</label>
+                                <textarea class="form-control form-control-sm" id="scope_desc" name="scope_desc" placeholder="Enter Scope Description"></textarea>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group col-md-6">
+                                    <label for="inputPerson">Start Date</label>
+                                    <input type="text" class="form-control datepicker_scope form-control-sm" id="scope_start" name="scope_start" required>
+                                </div>
+                                <div class="form-group col-md-6">
+                                    <label for="inputPerson">End Date</label>
+                                    <input type="text" class="form-control datepicker_scope form-control-sm" id="scope_end" name="scope_end" required>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="modal-footer">
+                            <button type="submit" id="scope_action" name="d_action" value="scope_save" class="btn btn-primary">Save</button>
+                        </div>
+                        
+                    </div>
+                </div>
+            </form>
+        </div>
+        <!-- END: modal ADD SCOPE -->
+        
+        <!-- START: modal UPDATE PROJECT (OVERALL PROJECT VIEW TREE)-->
+        <div class="modal fade custom-modal" id="UpdateModal" tabindex="-1" role="dialog" aria-labelledby="update" aria-hidden="true" style="display: none;">
+            <form id="updateProjectForm" action="{{ctxPath}}/t/IPM/copyds?invoke" method="POST">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                        
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel2">Edit Project</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">×</span>
+                            </button>
+                        </div>
+                        
+                        <div class="modal-body">
+                            <div id='errorUpdateProject' class="hidden alert alert-danger alert-dismissible fade show" role="alert">
+                                <p class='forAlert' id='errorUpdateProjectContent'></p>
+                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="form-group">
+                                <label for="inputName">Project Name</label>
+                                <input type="hidden" name="id_project_custom" id="id_project_custom" value="" />
+                                <input type="hidden" name="project_id" id="project_id_select" value="" />
+                                <input type="text" class="form-control form-control-sm" id="update_name_project" name="project_name" autocomplete="off" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="inputDesc">Description</label>
+                                <textarea class="form-control form-control-sm" id="update_decs_project" name="project_desc" ></textarea>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group col-md-6">
+                                    <label for="inputPerson">Start Date</label>
+                                    <input type="text" class="form-control datepicker_edit_project form-control-sm" id="update_project_start" name="project_start" required>
+                                </div>
+                                <div class="form-group col-md-6">
+                                    <label for="inputPerson">End Date</label>
+                                    <input type="text" class="form-control datepicker_edit_project form-control-sm" id="update_project_end" name="project_end" required>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="modal-footer">
+                            <button type="button" id="delete_project_update" class="btn btn-danger">Delete</button>
+                            <button type="button" id="update_project" class="btn btn-primary">Save</button>
+                        </div>
+                        
+                    </div>
+                </div>
+            </form>
+        </div>
+        <!-- END: modal UPDATE PROJECT (OVERALL PROJECT VIEW TREE)-->
+        
+        <!-- START: modal UPDATE SCOPE (OVERALL PROJECT VIEW TREE)-->
+        <div class="modal fade custom-modal" id="updateScope" tabindex="-1" role="dialog" aria-labelledby="update" aria-hidden="true" style="display: none;">
+            <form id="updateScopeForm" action="{{ctxPath}}/t/IPM/copyds?invoke" method="POST">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                        
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel2">Edit Scope</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">×</span>
+                        </button>
+                    </div>
+                    
+                    <div class="modal-body">
+                        <div id='errorUpdateScope' class="hidden alert alert-danger alert-dismissible fade show" role="alert">
+                            <p class='forAlert' id='errorUpdateScopeContent'></p>
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="form-group">
+                            <label for="inputName">Scope Name</label>
+                            <input type="hidden" name="id_scope_custom" id="id_scope_custom" value="" />
+                            <input type="hidden" name="id_scope" id="id_scope_select" value="" />
+                            <input type="text" class="form-control form-control-sm" id="update_name_scope" name="scope_name" autocomplete="off" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="inputDesc">Description</label>
+                            <textarea class="form-control form-control-sm" id="update_scope_desc" name="scope_desc"></textarea>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group col-md-6">
+                                <label for="inputPerson">Start Date</label>
+                                <input type="text" class="form-control datepicker_edit_scope form-control-sm" id="update_scope_start" name="scope_start" required>
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label for="inputPerson">End Date</label>
+                                <input type="text" class="form-control datepicker_edit_scope form-control-sm" id="update_scope_end" name="scope_end" required>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="modal-footer">
+                        <button type="button" id="delete_update_scope" class="btn btn-danger">Delete</button>
+                        <button type="button" id="update_scope" class="btn btn-primary">Save</button>
+                    </div>
+                    
+                    </div>
+                </div>
+            </form>
+        </div>
+        <!-- END: modal UPDATE SCOPE (OVERALL PROJECT VIEW TREE)-->
+        
+        <!-- START: modal UPDATE SPEC. (OVERALL PROJECT VIEW TREE) -->
+        <div class="modal fade custom-modal" id="update_spec_tree" tabindex="-1" role="dialog" aria-labelledby="update_spec_tree" aria-hidden="true">
+            <form id="updateSpecFormTree" action="{{ctxPath}}/t/IPM/copyds?invoke" method="POST">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                        
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel2">Update Specification</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">×</span>
+                            </button>
+                        </div>
+                        
+                        <div class="modal-body">
+                            <div id='errorUpdateSpecTree' class="hidden alert alert-danger alert-dismissible fade show" role="alert">
+                                <p class='forAlert' id='errorUpdateSpecTreeContent'></p>
+                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group col-md-6">
+                                    <label for="inputName">Name</label>
+                                    <input type="hidden" id="id_spec_update" name="id_spec">
+                                    <input type="text" class="form-control form-control-sm" id="spec_name_udpdate" name="inputName" placeholder="Enter Spec. Name" autocomplete="off">
+                                </div>
+                                <div class="form-group col-md-6">
+                                    <label for="inputScope">Scope</label>
+                                    <select name="spec_scop_update" id="spec_scop_update" class="form-control form-control-sm"></select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="inputDesc">Description</label>
+                                <textarea class="form-control form-control-sm" id="spec_desc_update" placeholder="Enter Spec. Description" name="inputDesc"></textarea>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group col-md-6">
+                                    <label for="spec_person_update">Assigned Person</label>
+                                    <select name="spec_person_update" id="spec_person_update" class="form-control form-control-sm"></select>
+                                </div>
+                                <div class="form-group col-md-6">
+                                    <label for="inputDuration">Duration</label>
+                                    <select name="spec_duration_update" id="spec_duration_update" class="form-control form-control-sm"></select>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group col-md-12">
+                                    <label for="spec_tag">Tag</label>
+                                    <select id="spec_tag" name="tag" class="form-control form-control-sm" multiple="multiple"></select>
+                                </div>
+                            </div>
+                        </div>
+                
+                        <div class="modal-footer">
+                            <button type="button" id="btnDeleteSpecTree" name="d_action" value="delete_spec" class="btn btn-danger">Delete</button>
+                            <button type="button" id="btnUpdateSpecTree" class="btn btn-primary">Update</button>
+                        </div>
+                        
+                        
+                    </div>
+                </div>
+            </form>
+        </div>
+        <!-- END: modal UPDATE SPEC. (OVERALL PROJECT VIEW TREE) -->
+        
+        <!-- END: MODAL AQIL -->
+        
+        <!-- START: modal UPDATE INFORMATION - SCOPE(IGNORE) -->
+        <div class="modal fade custom-modal" id="scopeModal" tabindex="-1" role="dialog" aria-labelledby="addModal" aria-hidden="true">
+          <form id="transaction-form" action="{{ctxPath}}/t/IPM/copyds?invoke" method="POST">    
+              
+          <div class="modal-dialog" role="document">
+        	<div class="modal-content">
+        	  <div class="modal-header">
+        		<h5 class="modal-title" id="exampleModalLabel2">Update Information</h5>
+        		<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        		  <span aria-hidden="true">×</span>
+        		</button>
+        	  </div>
+        	  <div class="modal-body">
+                
+                    <div class="form-group col-md-12">
+                        <label for="inputDesc">Name</label>
+                        <input type="text" class="form-control form-control-sm" name="scope_name" id="scope-name"/>
+                    </div>
+                    <div class="form-group">
+                        <label for="inputDesc">Note</label>
+                        <textarea class="form-control form-control-sm"  name="scope_note" id="scope-note"></textarea>
+                    </div>
+        
+        	  </div>
+        	  <div class="modal-footer">
+        	        <input type="hidden" name="scope_id" id="scope_id" value=""/>
+        		    <!--<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>-->
+        		    <!--<button type="submit" id="b_action" name="d_action" value="update_scope" class="btn btn-success">Update</button>-->
+        	  </div>
+        	</div>
+          </div>
+          </form>
+        </div>
+        <!-- END: modal UPDATE INFORMATION - SCOPE (IGNORE) -->
+        
+        <!-- START: modal if NO PROJECT -->
+        <div class="modal fade custom-modal" id="noProjectNotify" tabindex="-1" role="dialog" style="display: none;" data-backdrop="static" data-keyboard="false">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    
+                    <div class="modal-header bg-danger">
+                        <h5 class="modal-title" id="exampleModalLabel2">No Project</h5>
+                    </div>
+                    
+                    <div class="modal-body">
+                        <p><b>No project availabe to display in system. Please add a project to proceed by clicking the button below.</b></p>
+                        <button type="button" id="noProjectAddProjectBtn" class="btn btn-primary">Add Project</button>
+                    </div>
+                
+                </div>
+            </div>
+        </div>
+        <!-- END: modal if NO PROJECT -->
+
+    </body>
+</html>    
